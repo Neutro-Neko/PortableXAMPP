@@ -8,7 +8,7 @@ Portable XAMPP is a lightweight, macOS-native alternative to traditional XAMPP. 
 - **macOS Native Experience**: Comes with a proper macOS squircle app icon and integrates perfectly with the OS. There is no clunky management UI: simply start the app to start the servers, and quit the app from the Dock to stop them.
 - **Zero-Setup Configuration**: On your first launch, the app automatically generates a configuration file and natively prompts you to set your preferred `localhost` working directory.
 - **Sandboxed Security**: Apache is restricted using a custom macOS Seatbelt kernel profile (`xampp-jail.sb`), dynamically tied to the specific folder you configure, triggering native TCC permission dialogs for maximum privacy.
-- **Beautiful Localhost UI**: The default localhost directory index has been fully stylized with custom CSS and VSCode file icons. Just because we deal with raw code doesn't mean we can't have a nice interface.
+- **Beautiful Localhost UI**: The default localhost directory index has been fully stylized with custom CSS and VSCode file icons. The UI assets are automatically injected into your web directory as `.XAMPPconfig` on the first launch. You can easily customize this by adding your own files to the `.XAMPPconfig/overrides` directory (like an `override.css` or custom icons) without modifying the default theme.
 - **Clean phpMyAdmin**: If you place a symlink to phpMyAdmin inside your localhost directory, it renders with its proper name and database icon instead of looking like a generic folder.
 
 ## 🚀 Usage
