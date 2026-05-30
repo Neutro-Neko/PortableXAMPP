@@ -1,0 +1,14 @@
+# Redirect requests for favicon.ico to the SVG icon
+Redirect /favicon.ico /.XAMPPconfig/defaults/icons/files/xampp.svg
+
+# Hide configuration and system files from the Apache directory listing
+IndexIgnore .htaccess .XAMPPconfig .DS_Store
+
+# Set the primary stylesheet for the directory index
+IndexStyleSheet /.XAMPPconfig/defaults/autoindex.css
+
+# Inject header.html at the top of the directory listing
+HeaderName /.XAMPPconfig/defaults/header.html
+
+# Fix UTF-8 and show forbidden files (like .gitignore which is protected by Apache authz)
+IndexOptions +Charset=UTF-8 +ShowForbidden

@@ -1,0 +1,174 @@
+@charset "UTF-8";
+
+:root {
+    /* Default: Light theme colors */
+    --bg-color: #f8fafc;
+    --card-bg: rgba(255, 255, 255, 0.75);
+    --border-color: rgba(0, 0, 0, 0.08);
+    --text-primary: #0f172a;
+    --text-secondary: #475569;
+    --accent-color: #ff5722;
+    --hover-bg: rgba(0, 0, 0, 0.03);
+    --gradient-from: rgba(255, 87, 34, 0.04);
+    --gradient-to: rgba(0, 150, 136, 0.03);
+    --folder-text: #e65100;
+}
+
+@media (prefers-color-scheme: dark) {
+    :root {
+        /* Dark theme colors */
+        --bg-color: #0b0f19;
+        --card-bg: rgba(17, 24, 39, 0.75);
+        --border-color: rgba(255, 255, 255, 0.08);
+        --text-primary: #f3f4f6;
+        --text-secondary: #9ca3af;
+        --accent-color: #ff5722;
+        --hover-bg: rgba(255, 255, 255, 0.03);
+        --gradient-from: rgba(255, 87, 34, 0.08);
+        --gradient-to: rgba(0, 150, 136, 0.05);
+        --folder-text: #ff9800;
+    }
+}
+
+body {
+    background-color: var(--bg-color);
+    color: var(--text-primary);
+    font-family: -apple-system, BlinkMacSystemFont, "SF Pro", "SF Pro Text", "SF Pro Display", "Helvetica Neue", Helvetica, Arial, sans-serif;
+    margin: 0;
+    padding: 60px 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-height: 100vh;
+    box-sizing: border-box;
+    background-image: 
+        radial-gradient(at 0% 0%, var(--gradient-from) 0px, transparent 50%),
+        radial-gradient(at 100% 100%, var(--gradient-to) 0px, transparent 50%);
+    background-attachment: fixed;
+    transition: background-color 0.3s ease, color 0.3s ease;
+
+    /* Style the autoindex H1 */
+    h1 {
+        font-size: 24px;
+        font-weight: 600;
+        margin-top: 0;
+        margin-bottom: 24px;
+        color: var(--text-primary);
+        width: 100%;
+        max-width: 760px;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+
+        &::before {
+            content: "🌐";
+            font-size: 22px;
+        }
+    }
+
+    /* Style the list as the main glass card */
+    ul {
+        background: var(--card-bg);
+        border: 1px solid var(--border-color);
+        border-radius: 24px;
+        padding: 24px;
+        margin: 0;
+        width: 100%;
+        max-width: 760px;
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+        backdrop-filter: blur(16px);
+        -webkit-backdrop-filter: blur(16px);
+        list-style: none;
+        box-sizing: border-box;
+        transition: background 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+
+        li {
+            margin: 4px 0;
+            border-radius: 12px;
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+
+            &:hover {
+                background-color: var(--hover-bg);
+                transform: translateX(6px);
+            }
+
+            a {
+                display: flex;
+                align-items: center;
+                padding: 14px 18px;
+                color: var(--text-secondary);
+                text-decoration: none;
+                font-size: 16px;
+                font-weight: 400;
+                transition: color 0.2s ease;
+                border-radius: 12px;
+
+                &:hover {
+                    color: var(--text-primary);
+                }
+
+                &::before {
+                    content: "";
+                    display: inline-block;
+                    width: 24px;
+                    height: 24px;
+                    margin-right: 14px;
+                    background-image: url("/.XAMPPconfig/defaults/icons/files/document.svg"); /* Default fallback for all files */
+                    background-size: contain;
+                    background-repeat: no-repeat;
+                    background-position: center;
+                    flex-shrink: 0;
+                    transition: transform 0.2s ease;
+                }
+
+                &:hover::before {
+                    transform: scale(1.15);
+                }
+
+                &[href$="/"] {
+                    font-weight: 600;
+                    color: var(--folder-text);
+
+                    &::before {
+                        background-image: url("/.XAMPPconfig/defaults/icons/folders/folder.svg");
+                    }
+                }
+
+                &[href="/"]::before {
+                    content: "";
+                    background-image: url("/.XAMPPconfig/defaults/icons/files/http.svg");
+                    background-size: contain;
+                    background-repeat: no-repeat;
+                    background-position: center;
+                }
+
+                &[href^="/"]:not([href="/"])::before,
+                &[href$="../"]::before {
+                    content: "↩️";
+                    background-image: none;
+                    font-size: 18px;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                }
+
+                /* 3. Files with specific extensions (overriding the default via Javascript Dictionary) */
+                &.dict-icon::before {
+                    background-image: var(--dynamic-icon) !important;
+                }
+            }
+        }
+    }
+
+    /* Style the Apache footer */
+    address {
+        margin-top: 32px;
+        font-style: normal;
+        font-size: 12px;
+        color: var(--text-secondary);
+        text-align: center;
+        width: 100%;
+        max-width: 760px;
+        letter-spacing: 0.5px;
+    }
+}
