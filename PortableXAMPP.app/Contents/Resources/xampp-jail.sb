@@ -1,0 +1,44 @@
+(version 1)
+(deny default)
+
+;; 1. Inherit macOS baseline (Allows the binary to wake up, allocate memory, and log errors)
+(import "system.sb")
+
+;; 2. Valid Network Operations
+(allow network-inbound)
+(allow network-outbound)
+(allow network-bind)
+
+;; 3. Process and IPC
+(allow process-fork)
+(allow process-exec)
+(allow signal)
+(allow sysctl-read)
+(allow ipc-posix-shm)
+(allow ipc-posix-sem)
+
+;; 4. Allow Apache to stat() the parent directories without failing
+(allow file-read-metadata)
+
+;; 5. Core system paths (using absolute resolved paths)
+(allow file-read*
+    (subpath "/usr")
+    (subpath "/System")
+    (subpath "/Library")
+    (subpath "/bin")
+    (subpath "/sbin")
+    (subpath "/private/etc")
+    (subpath "/private/var")
+    (subpath "/dev")
+)
+
+;; 6. Homebrew and Temp
+(allow file-read* file-write*
+    (subpath "/private/tmp")
+    (subpath "/opt/homebrew")
+)
+
+;; 7. THE JAIL: Explicitly restrict file data access to ONLY your web folder
+(allow file-read* file-write*
+    (subpath (param "WEB_ROOT"))
+)
