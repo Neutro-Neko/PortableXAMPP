@@ -78,6 +78,20 @@ document.addEventListener("DOMContentLoaded", () => {
         if (e.target === modal) modal.style.display = 'none';
     });
 
+    // Cache promises to ensure we only make ONE network request per icon type
+    const iconCache = {};
+    function getIconUrl(iconName) {
+        if (!iconCache[iconName]) {
+            const overrideUrl = `/.XAMPPconfig/overrides/icons/files/${iconName}`;
+            const defaultUrl = `/.XAMPPconfig/defaults/icons/files/${iconName}`;
+            
+            iconCache[iconName] = fetch(overrideUrl, { method: 'HEAD' })
+                .then(res => res.ok ? overrideUrl : defaultUrl)
+                .catch(() => defaultUrl);
+        }
+        return iconCache[iconName];
+    }
+
     // 2. Loop through file links to apply icons and intercept downloads
     document.querySelectorAll('li a').forEach(link => {
         const href = link.getAttribute('href');
@@ -105,8 +119,10 @@ document.addEventListener("DOMContentLoaded", () => {
         // Apply icons dynamically using the dictionary
         for (const [iconName, extensions] of Object.entries(fileDictionary)) {
             if (extensions.some(ext => hrefLower.endsWith(ext))) {
-                link.style.setProperty('--dynamic-icon', `url('/.XAMPPconfig/defaults/icons/files/${iconName}')`);
-                link.classList.add('dict-icon');
+                getIconUrl(iconName).then(url => {
+                    link.style.setProperty('--dynamic-icon', `url('${url}')`);
+                    link.classList.add('dict-icon');
+                });
                 break;
             }
         }
