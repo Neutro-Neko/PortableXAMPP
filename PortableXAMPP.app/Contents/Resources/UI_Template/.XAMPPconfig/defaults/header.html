@@ -1,7 +1,4 @@
-<!-- User Customization Override Stylesheet -->
-<link rel="stylesheet" href="/.XAMPPconfig/overrides/override.css" type="text/css">
-
-<!-- Custom Glassmorphic Modal for Non-Displayable Files -->
+<!-- User Customization Override Stylesheet is injected dynamically via script --><!-- Custom Glassmorphic Modal for Non-Displayable Files -->
 <div id="custom-modal" style="
     display: none;
     position: fixed;
@@ -51,6 +48,17 @@
 
 <script>
 document.addEventListener("DOMContentLoaded", () => {
+    // Dynamically load override.css only if it exists
+    const cssUrl = '/.XAMPPconfig/overrides/override.css';
+    fetch(cssUrl, { method: 'HEAD' }).then(res => {
+        if (res.ok) {
+            const link = document.createElement('link');
+            link.rel = 'stylesheet';
+            link.href = cssUrl;
+            document.head.appendChild(link);
+        }
+    });
+
     // 1. Centralized dictionary mapping icons to file extensions
     const fileDictionary = {
         "php.svg":          [".php", ".phtml"],
