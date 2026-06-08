@@ -1,151 +1,114 @@
-<!-- User Customization Override Stylesheet is injected dynamically via script --><!-- Custom Glassmorphic Modal for Non-Displayable Files -->
-<div id="custom-modal" style="
-    display: none;
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.4);
-    backdrop-filter: blur(8px);
-    -webkit-backdrop-filter: blur(8px);
-    z-index: 10000;
-    align-items: center;
-    justify-content: center;
-    font-family: -apple-system, BlinkMacSystemFont, 'SF Pro', sans-serif;
-">
-    <div style="
-        background: var(--card-bg, rgba(255, 255, 255, 0.85));
-        border: 1px solid var(--border-color, rgba(0, 0, 0, 0.1));
-        border-radius: 20px;
-        padding: 30px;
-        max-width: 400px;
-        width: 85%;
-        text-align: center;
-        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
-        color: var(--text-primary, #0f172a);
-    ">
-        <div style="font-size: 40px; margin-bottom: 15px;">⚠️</div>
-        <h3 style="margin: 0 0 10px 0; font-size: 18px; font-weight: 600;">Cannot Display File</h3>
-        <p style="margin: 0 0 20px 0; font-size: 14px; color: var(--text-secondary, #475569); line-height: 1.5;">
-            This file type cannot be displayed natively in the browser.
-        </p>
-        <button id="modal-close" style="
-            background: var(--accent-color, #ff5722);
-            color: #fff;
-            border: none;
-            border-radius: 10px;
-            padding: 10px 24px;
-            font-size: 14px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: opacity 0.2s;
-        " onmouseover="this.style.opacity='0.9'" onmouseout="this.style.opacity='1'">
-            Dismiss
-        </button>
+<!-- Custom Glassmorphic Modal for Non-Displayable Files -->
+<div id="custom-modal" class="modal-overlay">
+    <div>
+        <div class="icon">⚠️</div>
+        <h3>Cannot Display File</h3>
+        <p>This file type cannot be displayed natively in the browser.</p>
+        <button id="modal-close">Dismiss</button>
     </div>
 </div>
 
 <script>
-document.addEventListener("DOMContentLoaded", () => {
-    // Dynamically load override.css only if it exists
-    const cssUrl = '/.XAMPPconfig/overrides/override.css';
-    fetch(cssUrl, { method: 'HEAD' }).then(res => {
-        if (res.ok) {
-            const link = document.createElement('link');
-            link.rel = 'stylesheet';
-            link.href = cssUrl;
-            document.head.appendChild(link);
-        }
-    });
-
-    // 1. Centralized dictionary mapping icons to file extensions
-    const fileDictionary = {
-        "php.svg":          [".php", ".phtml"],
-        "html.svg":         [".html", ".htm"],
-        "css.svg":          [".css"],
-        "js.svg":           [".js", ".mjs", ".cjs", ".ts"],
-        "sql.svg":          [".sql", ".db", ".sqlite"],
-        "png.svg":          [".png", ".jpg", ".jpeg", ".gif", ".webp", ".heic", ".heif"],
-        "zip.svg":          [".zip", ".rar", ".tar", ".gz", ".7z"],
-        "shell.svg":        [".sh", ".zsh", ".bash"],
-        "svg.svg":          [".svg"],
-        "pdf.svg":          [".pdf"],
-        "git.svg":          [".gitignore", ".git"],
-        "markdown.svg":     [".md"],
-        "xml.svg":          [".xml"],
-        "exe.svg":          [".dmg", ".pkg"]
-    };
-
-    // Modal Control Elements
-    const modal = document.getElementById('custom-modal');
-    const closeBtn = document.getElementById('modal-close');
-    
-    closeBtn.addEventListener('click', () => { modal.style.display = 'none'; });
-    modal.addEventListener('click', (e) => {
-        if (e.target === modal) modal.style.display = 'none';
-    });
-
-    // Cache promises to ensure we only make ONE network request per icon type
-    const iconCache = {};
-    function getIconUrl(iconName) {
-        if (!iconCache[iconName]) {
-            const overrideUrl = `/.XAMPPconfig/overrides/icons/files/${iconName}`;
-            const defaultUrl = `/.XAMPPconfig/defaults/icons/files/${iconName}`;
-            
-            iconCache[iconName] = fetch(overrideUrl, { method: 'HEAD' })
-                .then(res => res.ok ? overrideUrl : defaultUrl)
-                .catch(() => defaultUrl);
-        }
-        return iconCache[iconName];
-    }
-
-    // 2. Loop through file links to apply icons and intercept downloads
-    document.querySelectorAll('li a').forEach(link => {
-        const href = link.getAttribute('href');
-        if (!href) return;
-
-        const hrefLower = href.toLowerCase();
-
-        // Special case: phpMyAdmin symlink style override
-        if (hrefLower.includes('phpmyadmin')) {
-            link.style.setProperty('--dynamic-icon', "url('/.XAMPPconfig/defaults/icons/files/phpmyadmin.ico')");
-            link.classList.add('dict-icon');
-            link.textContent = 'phpMyAdmin';
-            return;
-        }
-
-        // Gray out hidden files (files starting with a dot, but ignoring the parent directory link)
-        const fileName = link.textContent.trim();
-        if (fileName.startsWith('.') && hrefLower !== '../') {
-            link.style.opacity = '0.4';
-        }
-
-        // Skip directories and parent links
-        if (hrefLower.endsWith('/') || hrefLower.includes('../') || hrefLower === '/' || hrefLower.startsWith('?')) return;
-
-        // Apply icons dynamically using the dictionary
-        for (const [iconName, extensions] of Object.entries(fileDictionary)) {
-            if (extensions.some(ext => hrefLower.endsWith(ext))) {
-                getIconUrl(iconName).then(url => {
-                    link.style.setProperty('--dynamic-icon', `url('${url}')`);
-                    link.classList.add('dict-icon');
-                });
-                break;
+    document.addEventListener("DOMContentLoaded", () => {
+        // Dynamically load override.css only if it exists
+        const cssUrl = '/.XAMPPconfig/overrides/override.css';
+        fetch(cssUrl, { method: 'HEAD' }).then(res => {
+            if (res.ok) {
+                const link = document.createElement('link');
+                link.rel = 'stylesheet';
+                link.href = cssUrl;
+                document.head.appendChild(link);
             }
+        });
+
+        // 1. Centralized dictionary mapping icons to file extensions
+        const fileDictionary = {
+            "php.svg": [".php", ".phtml"],
+            "html.svg": [".html", ".htm"],
+            "css.svg": [".css"],
+            "js.svg": [".js", ".mjs", ".cjs", ".ts"],
+            "sql.svg": [".sql", ".db", ".sqlite"],
+            "png.svg": [".png", ".jpg", ".jpeg", ".gif", ".webp", ".heic", ".heif"],
+            "zip.svg": [".zip", ".rar", ".tar", ".gz", ".7z"],
+            "shell.svg": [".sh", ".zsh", ".bash"],
+            "svg.svg": [".svg"],
+            "pdf.svg": [".pdf"],
+            "git.svg": [".gitignore", ".git"],
+            "markdown.svg": [".md"],
+            "xml.svg": [".xml"],
+            "exe.svg": [".dmg", ".pkg"]
+        };
+
+
+        // Modal Control Elements
+        const modal = document.getElementById('custom-modal');
+        const closeBtn = document.getElementById('modal-close');
+        
+        closeBtn.addEventListener('click', () => { modal.style.display = 'none'; });
+        modal.addEventListener('click', (e) => {
+            if (e.target === modal) modal.style.display = 'none';
+        });
+
+        // Cache promises to ensure we only make ONE network request per icon type
+        const iconCache = {};
+        function getIconUrl(iconName) {
+            if (!iconCache[iconName]) {
+                const overrideUrl = `/.XAMPPconfig/overrides/icons/files/${iconName}`;
+                const defaultUrl = `/.XAMPPconfig/defaults/icons/files/${iconName}`;
+
+                iconCache[iconName] = fetch(overrideUrl, { method: 'HEAD' })
+                    .then(res => res.ok ? overrideUrl : defaultUrl)
+                    .catch(() => defaultUrl);
+            }
+            return iconCache[iconName];
         }
 
-        // Intercept clicks on non-viewable extensions
-        const viewableExtensions = [
-            'html', 'htm', 'php', 'txt', 'pdf', 'jpg', 'jpeg', 'png', 'gif', 'svg', 'webp', 'heic', 'heif', 'css', 'js', 'json', 'xml', 'md', 'csv'
-        ];
-        const ext = hrefLower.split('.').pop();
-        if (!viewableExtensions.includes(ext)) {
-            link.addEventListener('click', (e) => {
-                e.preventDefault();
-                modal.style.display = 'flex';
-            });
-        }
+        // 2. Loop through file links to apply icons and intercept downloads
+        document.querySelectorAll('li a').forEach(link => {
+            const href = link.getAttribute('href');
+            if (!href) return;
+
+            const hrefLower = href.toLowerCase();
+
+            // Special case: phpMyAdmin symlink style override
+            if (hrefLower.includes('phpmyadmin')) {
+                link.style.setProperty('--dynamic-icon', "url('/.XAMPPconfig/defaults/icons/files/phpmyadmin.ico')");
+                link.classList.add('dict-icon');
+                link.textContent = 'phpMyAdmin';
+                return;
+            }
+
+            // Gray out hidden files (files starting with a dot, but ignoring the parent directory link)
+            const fileName = link.textContent.trim();
+            if (fileName.startsWith('.') && hrefLower !== '../') {
+                link.style.opacity = '0.4';
+            }
+
+            // Skip directories and parent links
+            if (hrefLower.endsWith('/') || hrefLower.includes('../') || hrefLower === '/' || hrefLower.startsWith('?')) return;
+
+            // Apply icons dynamically using the dictionary
+            for (const [iconName, extensions] of Object.entries(fileDictionary)) {
+                if (extensions.some(ext => hrefLower.endsWith(ext))) {
+                    getIconUrl(iconName).then(url => {
+                        link.style.setProperty('--dynamic-icon', `url('${url}')`);
+                        link.classList.add('dict-icon');
+                    });
+                    break;
+                }
+            }
+
+            // Intercept clicks on non-viewable extensions
+            const viewableExtensions = [
+                'html', 'htm', 'php', 'txt', 'pdf', 'jpg', 'jpeg', 'png', 'gif', 'svg', 'webp', 'heic', 'heif', 'css', 'js', 'json', 'xml', 'md', 'csv'
+            ];
+            const ext = hrefLower.split('.').pop();
+            if (!viewableExtensions.includes(ext)) {
+                link.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    modal.style.display = 'flex';
+                });
+            }
+        });
     });
-});
 </script>

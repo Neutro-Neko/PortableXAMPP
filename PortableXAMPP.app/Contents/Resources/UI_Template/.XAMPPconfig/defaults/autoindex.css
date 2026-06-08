@@ -41,7 +41,7 @@ body {
     align-items: center;
     min-height: 100vh;
     box-sizing: border-box;
-    background-image: 
+    background-image:
         radial-gradient(at 0% 0%, var(--gradient-from) 0px, transparent 50%),
         radial-gradient(at 100% 100%, var(--gradient-to) 0px, transparent 50%);
     background-attachment: fixed;
@@ -113,7 +113,8 @@ body {
                     width: 24px;
                     height: 24px;
                     margin-right: 14px;
-                    background-image: url("/.XAMPPconfig/defaults/icons/files/document.svg"); /* Default fallback for all files */
+                    background-image: url("/.XAMPPconfig/defaults/icons/files/document.svg");
+                    /* Default fallback for all files */
                     background-size: contain;
                     background-repeat: no-repeat;
                     background-position: center;
@@ -170,5 +171,67 @@ body {
         width: 100%;
         max-width: 760px;
         letter-spacing: 0.5px;
+    }
+
+    /* Custom Modal Styles */
+    .modal-overlay {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        backdrop-filter: blur(8px);
+        -webkit-backdrop-filter: blur(8px);
+        z-index: 10000;
+        align-items: center;
+        justify-content: center;
+        font-family: -apple-system, BlinkMacSystemFont, "SF Pro", sans-serif;
+
+        >div {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 20px;
+            padding: 30px;
+            max-width: 400px;
+            width: 85%;
+            text-align: center;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+            color: var(--text-primary);
+
+            .icon {
+                font-size: 40px;
+                margin-bottom: 15px;
+            }
+
+            h3 {
+                margin: 0 0 10px 0;
+                font-size: 18px;
+                font-weight: 600;
+            }
+
+            p {
+                margin: 0 0 20px 0;
+                font-size: 14px;
+                color: var(--text-secondary);
+                line-height: 1.5;
+            }
+
+            button {
+                background: var(--accent-color);
+                color: #fff;
+                border: none;
+                border-radius: 10px;
+                padding: 10px 24px;
+                font-size: 14px;
+                font-weight: 600;
+                cursor: pointer;
+                transition: opacity 0.2s;
+
+                &:hover {
+                    opacity: 0.9;
+                }
+            }
+        }
     }
 }
