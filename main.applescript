@@ -80,6 +80,14 @@ on run
 		return
 	end if
 	
+	-- Auto-Inject UI Template & Drop Homebrew Config Symlinks
+	try
+		set uiTemplatePath to POSIX path of (path to resource "UI_Template")
+		-- Use cp -Rn to avoid overwriting existing UI files, then drop the symlinks
+		do shell script "cp -Rn " & quoted form of uiTemplatePath & "/.XAMPPconfig " & quoted form of targetFolder & " || true"
+		do shell script "ln -sf /opt/homebrew/etc/httpd/httpd.conf " & quoted form of (targetFolder & "/.XAMPPconfig/overrides/httpd_config.symlink") & " && ln -sf /opt/homebrew/etc/my.cnf " & quoted form of (targetFolder & "/.XAMPPconfig/overrides/mysql_config.symlink")
+	end try
+	
 	-- Start MySQL with Homebrew PATH exported and output redirected to avoid hanging
 	try
 		do shell script "export PATH=/opt/homebrew/bin:$PATH; /opt/homebrew/bin/mysql.server start > /dev/null 2>&1"
@@ -119,4 +127,3 @@ on quit
 	display notification "XAMPP servers stopped." with title "XAMPP Manager"
 	continue quit
 end quit
-
