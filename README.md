@@ -24,3 +24,8 @@ Portable XAMPP is a lightweight, macOS-native alternative to traditional XAMPP. 
 You can change your working directory by editing the `web_path.conf` file located inside the app bundle (`PortableXAMPP.app/Contents/Resources/web_path.conf`). 
 
 Because of the dynamic Micro-Config architecture, the app automatically handles rerouting Apache's `DocumentRoot` for you on every launch. If you need to make deep, global server adjustments (like changing ports), you make those natively in your global Homebrew `/opt/homebrew/etc/httpd/httpd.conf` file.
+
+## ⚖️ Disclaimer & Acknowledgements
+
+- **XAMPP Name & Logo**: The app icon is a slightly modified version of the official XAMPP logo. "XAMPP" and the XAMPP logo are trademarks of Apache Friends / Bitnami. This project is an independent, unofficial, open-source macOS alternative and is **not** affiliated with, maintained by, or endorsed by Apache Friends.
+- **UI Icons**: The file icons used in the localhost UI are sourced from the VS Code Material Icon Theme (MIT Licensed). The individual language logos depicted in those icons remain trademarks of their respective languages/organizations.
