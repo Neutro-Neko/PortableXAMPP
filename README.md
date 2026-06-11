@@ -27,5 +27,5 @@ Because of the dynamic Micro-Config architecture, the app automatically handles 
 
 ## ⚖️ Disclaimer & Acknowledgements
 
-- **XAMPP Name & Logo**: The app icon is a slightly modified version of the official XAMPP logo. "XAMPP" and the XAMPP logo are trademarks of Apache Friends / Bitnami. This project is an independent, unofficial, open-source macOS alternative and is **not** affiliated with, maintained by, or endorsed by Apache Friends.
+- **XAMPP Name & Logo**: The app icon is a slightly modified version of the official XAMPP logo to be a squircle. "XAMPP" and the XAMPP logo are trademarks of Apache Friends / Bitnami. This project is an independent, unofficial, open-source macOS alternative and is **not** affiliated with, maintained by, or endorsed by Apache Friends (yet).
 - **UI Icons**: The file icons used in the localhost UI are sourced from the VS Code Material Icon Theme (MIT Licensed). The individual language logos depicted in those icons remain trademarks of their respective languages/organizations.
