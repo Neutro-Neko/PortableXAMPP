@@ -80,14 +80,21 @@ on run
 		return
 	end if
 	
-	-- Auto-Inject UI Template & Drop Homebrew Config Symlinks
+	-- Auto-Inject UI Template
 	try
 		set uiTemplatePath to POSIX path of (path to resource "UI_Template")
-		-- Use cp -Rn to avoid overwriting existing UI files, then drop the symlinks
+		-- Use cp -Rn to avoid overwriting existing UI files
 		do shell script "cp -Rn " & quoted form of uiTemplatePath & "/.XAMPPconfig " & quoted form of targetFolder & " || true"
-		do shell script "ln -sf /opt/homebrew/etc/httpd/httpd.conf " & quoted form of (targetFolder & "/.XAMPPconfig/overrides/httpd_config.symlink") & " && ln -sf /opt/homebrew/etc/my.cnf " & quoted form of (targetFolder & "/.XAMPPconfig/overrides/mysql_config.symlink")
 	end try
 	
+	-- Generate Micro-Config for zero-setup portability
+	try
+		set microConfig to targetFolder & "/.XAMPPconfig/overrides/micro.conf"
+		do shell script "printf 'DocumentRoot \"%s\"\\n<Directory \"%s\">\\nOptions Indexes FollowSymLinks\\nAllowOverride All\\nRequire all granted\\n</Directory>\\n' " & quoted form of targetFolder & " " & quoted form of targetFolder & " > " & quoted form of microConfig
+	on error errMsg
+		display dialog "Failed to generate micro-configuration: " & errMsg buttons {"OK"} default button "OK" with icon stop
+	end try
+
 	-- Start MySQL with Homebrew PATH exported and output redirected to avoid hanging
 	try
 		do shell script "export PATH=/opt/homebrew/bin:$PATH; /opt/homebrew/bin/mysql.server start > /dev/null 2>&1"
@@ -95,11 +102,11 @@ on run
 		display dialog "Failed to start MySQL: " & errMsg buttons {"OK"} default button "OK" with icon stop
 	end try
 	
-	-- Start Apache with Homebrew PATH exported and output redirected to avoid hanging
+	-- Start Apache with Homebrew PATH exported, sandboxed, and using the Micro-Config Include
 	try
 		set jailPath to POSIX path of (path to resource "xampp-jail.sb")
-		-- 1.7 Sandbox Parameter Passing
-		do shell script "export PATH=/opt/homebrew/bin:$PATH; sandbox-exec -D WEB_ROOT=" & quoted form of targetFolder & " -f " & quoted form of jailPath & " /opt/homebrew/bin/httpd -k start > /dev/null 2>&1"
+		-- 1.7 Sandbox Parameter Passing & Micro-Config Injection
+		do shell script "export PATH=/opt/homebrew/bin:$PATH; sandbox-exec -D WEB_ROOT=" & quoted form of targetFolder & " -f " & quoted form of jailPath & " /opt/homebrew/bin/httpd -c \"Include " & quoted form of microConfig & "\" -k start > /dev/null 2>&1"
 	on error errMsg
 		display dialog "Failed to start Apache: " & errMsg buttons {"OK"} default button "OK" with icon stop
 	end try
