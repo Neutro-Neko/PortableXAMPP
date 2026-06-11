@@ -49,16 +49,34 @@
             if (e.target === modal) modal.style.display = 'none';
         });
 
-        // Cache promises to ensure we only make ONE network request per icon type
+        // Cache synchronous checks to ensure we only make ONE network request per icon type
         const iconCache = {};
-        function getIconUrl(iconName) {
-            if (!iconCache[iconName]) {
+        function getResolvedIconUrl(iconName) {
+            if (iconCache[iconName] === undefined) {
                 const overrideUrl = `/.XAMPPconfig/overrides/icons/files/${iconName}`;
                 const defaultUrl = `/.XAMPPconfig/defaults/icons/files/${iconName}`;
+                const documentUrl = `/.XAMPPconfig/defaults/icons/files/document.svg`;
 
-                iconCache[iconName] = fetch(overrideUrl, { method: 'HEAD' })
-                    .then(res => res.ok ? overrideUrl : defaultUrl)
-                    .catch(() => defaultUrl);
+                // Check override
+                let req = new XMLHttpRequest();
+                req.open('HEAD', overrideUrl, false); // false makes it synchronous
+                try { req.send(null); } catch(e) {}
+                if (req.status === 200) {
+                    iconCache[iconName] = overrideUrl;
+                    return iconCache[iconName];
+                }
+
+                // Check standard
+                req = new XMLHttpRequest();
+                req.open('HEAD', defaultUrl, false);
+                try { req.send(null); } catch(e) {}
+                if (req.status === 200) {
+                    iconCache[iconName] = defaultUrl;
+                    return iconCache[iconName];
+                }
+
+                // Fallback
+                iconCache[iconName] = documentUrl;
             }
             return iconCache[iconName];
         }
@@ -90,10 +108,9 @@
             // Apply icons dynamically using the dictionary
             for (const [iconName, extensions] of Object.entries(fileDictionary)) {
                 if (extensions.some(ext => hrefLower.endsWith(ext))) {
-                    getIconUrl(iconName).then(url => {
-                        link.style.setProperty('--dynamic-icon', `url('${url}')`);
-                        link.classList.add('dict-icon');
-                    });
+                    const resolvedUrl = getResolvedIconUrl(iconName);
+                    link.style.setProperty('--dynamic-icon', `url('${resolvedUrl}')`);
+                    link.classList.add('dict-icon');
                     break;
                 }
             }
