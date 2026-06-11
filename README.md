@@ -6,9 +6,9 @@ Portable XAMPP is a lightweight, macOS-native alternative to traditional XAMPP. 
 
 - **Homebrew Powered**: Uses your system's Homebrew installations of `httpd`, `mysql`, and `php`. If you don't have them installed, the app automatically detects this and installs them for you via a Terminal script on the first launch.
 - **macOS Native Experience**: Comes with a proper macOS squircle app icon and integrates perfectly with the OS. There is no clunky management UI: simply start the app to start the servers, and quit the app from the Dock to stop them.
-- **Zero-Setup Configuration**: On your first launch, the app automatically generates a configuration file and natively prompts you to set your preferred `localhost` working directory.
+- **Zero-Setup Configuration (Micro-Config)**: On your first launch, the app automatically generates a configuration file and natively prompts you to set your preferred `localhost` working directory. Under the hood, it seamlessly injects a dynamic `micro.conf` into Apache at runtime, meaning your global Homebrew configuration is never modified and the app is 100% crash-proof when moved between computers.
 - **Sandboxed Security**: Apache is restricted using a custom macOS Seatbelt kernel profile (`xampp-jail.sb`), dynamically tied to the specific folder you configure, triggering native TCC permission dialogs for maximum privacy.
-- **Beautiful Localhost UI**: The default localhost directory index has been fully stylized with custom CSS and VSCode file icons. The UI assets are automatically injected into your web directory as `.XAMPPconfig` on the first launch. You can easily customize this by adding your own files to the `.XAMPPconfig/overrides` directory (like an `override.css` or custom icons) without modifying the default theme. *(Note: The main XAMPP icon cannot be overridden — it's not a bug, it's a feature!)*
+- **Beautiful Localhost UI**: The default localhost directory index has been fully stylized with custom CSS and VSCode file icons. It utilizes lightning-fast synchronous fallbacks so custom override icons render instantly with zero visual "blinking" delay. The UI assets are automatically injected into your web directory as `.XAMPPconfig` on the first launch. You can easily customize this by adding your own files to the `.XAMPPconfig/overrides` directory without modifying the default theme. *(Note: The main XAMPP icon cannot be overridden — it's not a bug, it's a feature!)*
 - **Clean phpMyAdmin**: If you place a symlink to phpMyAdmin inside your localhost directory, it renders with its proper name and database icon instead of looking like a generic folder.
 
 ## 🚀 Usage
@@ -21,4 +21,6 @@ Portable XAMPP is a lightweight, macOS-native alternative to traditional XAMPP. 
 
 ## ⚙️ Configuration
 
-You can easily change your working directory or adjust port configurations by editing the `web_path.conf` file located inside the app bundle (`PortableXAMPP.app/Contents/Resources/web_path.conf`).
+You can change your working directory by editing the `web_path.conf` file located inside the app bundle (`PortableXAMPP.app/Contents/Resources/web_path.conf`). 
+
+Because of the dynamic Micro-Config architecture, the app automatically handles rerouting Apache's `DocumentRoot` for you on every launch. If you need to make deep, global server adjustments (like changing ports), you make those natively in your global Homebrew `/opt/homebrew/etc/httpd/httpd.conf` file.
