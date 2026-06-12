@@ -7,4 +7,4 @@ Linux/build_appimage.sh
 # Ignore build artifacts and assembled UI_Templates
 *.zip
 build_temp/
-PortableXAMPP.app/Contents/Resources/UI_Template/
+PortableXAMPP.app/Contents/Resources/UI_Template
