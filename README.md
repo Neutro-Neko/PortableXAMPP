@@ -1,6 +1,6 @@
-# Portable XAMPP
+<h2 style="display: flex; align-items: center;"><img src="./Linux/UI_Template/.XAMPPconfig/defaults/icons/files/xampp.svg" width="72" alt="Portable XAMPP Logo">Portable XAMPP</h2>
 
-Portable XAMPP is a lightweight, macOS-native alternative to traditional XAMPP. By leveraging Homebrew's robust libraries instead of shipping its own compiled binaries, it maintains an incredibly small footprint while running natively on Apple Silicon and Intel Macs.
+Portable XAMPP is a lightweight, zero-setup alternative to traditional XAMPP built for macOS and Linux. By leveraging your system's native package managers (`brew`, `apt`, `dnf`) instead of shipping its own compiled binaries, it maintains an incredibly small footprint while running natively on your hardware.
 
 ## ✨ Features
 
@@ -8,10 +8,12 @@ Portable XAMPP is a lightweight, macOS-native alternative to traditional XAMPP. 
 - **macOS Native Experience**: Comes with a proper macOS squircle app icon and integrates perfectly with the OS. There is no clunky management UI: simply start the app to start the servers, and quit the app from the Dock to stop them.
 - **Zero-Setup Configuration (Micro-Config)**: On your first launch, the app automatically generates a configuration file and natively prompts you to set your preferred `localhost` working directory. Under the hood, it seamlessly injects a dynamic `micro.conf` into Apache at runtime, meaning your global Homebrew configuration is never modified and the app is 100% crash-proof when moved between computers.
 - **Sandboxed Security**: Apache is restricted using a custom macOS Seatbelt kernel profile (`xampp-jail.sb`), dynamically tied to the specific folder you configure, triggering native TCC permission dialogs for maximum privacy.
-- **Beautiful Localhost UI**: The default localhost directory index has been fully stylized with custom CSS and VSCode file icons. It utilizes lightning-fast synchronous fallbacks so custom override icons render instantly with zero visual "blinking" delay. The UI assets are automatically injected into your web directory as `.XAMPPconfig` on the first launch. You can easily customize this by adding your own files to the `.XAMPPconfig/overrides` directory without modifying the default theme. *(Note: The main XAMPP icon cannot be overridden — it's not a bug, it's a feature!)*
+- **Beautiful Localhost UI**: The default localhost directory index has been fully stylized with custom CSS and VSCode file icons. It utilizes lightning-fast synchronous fallbacks so custom override icons render instantly with zero visual "blinking" delay. The UI assets are automatically injected into your web directory as `.XAMPPconfig` on the first launch. You can easily customize this by adding your own files to the `.XAMPPconfig/overrides` directory without modifying the default theme. _(Note: The main XAMPP icon cannot be overridden — it's not a bug, it's a feature!)_
 - **Clean phpMyAdmin**: If you place a symlink to phpMyAdmin inside your localhost directory, it renders with its proper name and database icon instead of looking like a generic folder.
 
 ## 🚀 Usage
+
+### <img src="./apple.svg" width="24" alt="macOS"> macOS Edition
 
 1. Open `PortableXAMPP.app`.
 2. On the first launch, it will ask you to provide the absolute path to your web development folder. It will open `web_path.conf` in TextEdit—simply paste your path, save, and relaunch.
@@ -19,9 +21,17 @@ Portable XAMPP is a lightweight, macOS-native alternative to traditional XAMPP. 
 4. Your servers are now running! Visit `http://localhost:8080` in your browser. _(Note: It defaults to port `8080` instead of `80` to avoid requiring root/sudo privileges on macOS)._
 5. When you're done working, just **Quit** the app from the macOS Dock to shut down the Apache and MySQL servers.
 
+### <img src="./linux.svg" width="24" alt="Linux"> Linux Edition
+
+1. Navigate to the `Linux/` folder.
+2. Make the script executable: `chmod +x PortableXAMPP.sh`
+3. Launch it via the terminal (`./PortableXAMPP.sh start`) or use the provided `PortableXAMPP.desktop` entry.
+4. On the first launch, a native GUI prompt (Zenity/KDialog) will ask you to paste your target web directory into `web_path.conf`.
+5. The script auto-detects your package manager, ensures dependencies are met, and dynamically wraps the server in a secure `bwrap` or `firejail` sandbox if configured.
+
 ## ⚙️ Configuration
 
-You can change your working directory by editing the `web_path.conf` file located inside the app bundle (`PortableXAMPP.app/Contents/Resources/web_path.conf`). 
+You can change your working directory by editing the `web_path.conf` file located inside the app bundle (`PortableXAMPP.app/Contents/Resources/web_path.conf`).
 
 Because of the dynamic Micro-Config architecture, the app automatically handles rerouting Apache's `DocumentRoot` for you on every launch. If you need to make deep, global server adjustments (like changing ports), you make those natively in your global Homebrew `/opt/homebrew/etc/httpd/httpd.conf` file.
 
