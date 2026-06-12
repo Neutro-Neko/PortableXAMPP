@@ -2,9 +2,13 @@ web_path.conf
 .DS_Store
 */.DS_Store
 UI_Template/.XAMPPconfig/overrides/icons/*
-Linux/build_appimage.sh
+# Ignore the downloaded AppImage compiler, but NOT the build script
+scripts/appimagetool-x86_64.AppImage
 
 # Ignore build artifacts and assembled UI_Templates
 *.zip
 build_temp/
-PortableXAMPP.app/Contents/Resources/UI_Template
+PortableXAMPP.app/Contents/Resources/UI_Template/
+
+# Ignore compiled release binaries
+releases/

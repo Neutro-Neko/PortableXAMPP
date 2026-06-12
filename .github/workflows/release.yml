@@ -1,0 +1,58 @@
+name: Build and Release
+
+# Automatically trigger when you manually click "Run Workflow"
+# or when you push a new version tag (e.g., v1.0.0)
+on:
+  workflow_dispatch:
+  push:
+    tags:
+      - 'v*'
+
+jobs:
+  build:
+    name: Build on ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        # Run exactly the same build script simultaneously on an Apple Mac and a Linux machine!
+        os: [macos-latest, ubuntu-latest]
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Make Scripts Executable
+        run: |
+          chmod +x scripts/build.sh
+          chmod +x scripts/build_appimage.sh
+          chmod +x Linux/PortableXAMPP.sh
+
+      - name: Run Build Script
+        run: ./scripts/build.sh
+
+      - name: Upload Artifacts Temporarily
+        uses: actions/upload-artifact@v4
+        with:
+          name: release-packages-${{ matrix.os }}
+          path: releases/*.zip
+
+  publish_release:
+    name: Publish to GitHub Releases
+    needs: build
+    runs-on: ubuntu-latest
+    # Only run the publish step if we pushed a "v*" tag
+    if: startsWith(github.ref, 'refs/tags/')
+    
+    steps:
+      - name: Download all built packages
+        uses: actions/download-artifact@v4
+        with:
+          path: artifacts
+          pattern: release-packages-*
+          merge-multiple: true
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: artifacts/*.zip
+          generate_release_notes: true
