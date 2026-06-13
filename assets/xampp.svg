@@ -1,0 +1,36 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="256" height="282" viewBox="0 0 188 207">
+    <defs>
+        <radialGradient id="b" cx="4.8" cy="-37.5" r="82.9" fx="4.8" fy="-37.5" gradientTransform="matrix(2.55 0 0 2.54 83.7 194.1)" gradientUnits="userSpaceOnUse">
+            <stop offset="0" stop-color="#f5660f" />
+            <stop offset=".5" stop-color="#f66e18" stop-opacity=".61" />
+            <stop offset="1" stop-color="#f77721" stop-opacity="0" />
+        </radialGradient>
+        <radialGradient id="e" href="#b" cx="4.8" cy="-92" r="82.9" fx="4.8" fy="-92" gradientTransform="matrix(2.6 0 0 2.59 84.4 336.9)" gradientUnits="userSpaceOnUse" />
+        <filter id="f" color-interpolation-filters="sRGB">
+            <feGaussianBlur stdDeviation="1.7" />
+        </filter>
+        <filter id="g" width="1" height="1.3" x="0" y="-.1" color-interpolation-filters="sRGB">
+            <feGaussianBlur stdDeviation=".8" />
+        </filter>
+    </defs>
+
+    <rect x="0" y="0" width="188" height="188" rx="44" fill="#bb4803" />
+
+    <rect x="10" y="10" width="168" height="168" rx="39" fill="url(#e)" filter="url(#f)" />
+
+    <path d="M28 16.5a39 39 0 0 1 21-6h91a39 39 0 0 1 21 6l-21 12H49z" fill="#fff" opacity=".45" filter="url(#g)" />
+
+    <g fill="#fff">
+        <path d="M97.9 73.6a35.7 35.7 0 0 1-36.7 34.6 35.7 35.7 0 0 1-36.6-34.6A35.7 35.7 0 0 1 61.2 39a35.7 35.7 0 0 1 36.7 34.6" />
+        <path d="M98.1 118.8a38 38 0 0 1-37 38.7 38 38 0 0 1-37.2-38.7A38 38 0 0 1 61 80.2a38 38 0 0 1 37.1 38.6" />
+        <path d="M167.8 75.6c0 21-16.6 38-37.1 38s-37.1-17-37.1-38c0-20.9 16.6-37.8 37.1-37.8s37.1 17 37.1 37.8" />
+        <path d="M165.8 120.3c0 21.4-16.2 38.7-36.1 38.7s-36-17.3-36-38.7c0-21.3 16-38.6 36-38.6s36 17.3 36 38.6" />
+        <path d="M58.4 76h76.1v45h-76z" />
+    </g>
+
+    <g fill="#fb7922">
+        <path d="M131.2 62.6a11.3 11.3 0 0 0-11 11.4c0 8.7-1.3 10.6-2.2 11.3s-5.9 2.5-16.8 2.5c-11.3 0-21.8-1.2-32.6 3a28 28 0 0 0-14 12.2 41 41 0 0 0-4.3 20 11.3 11.3 0 1 0 22.5 0c0-5.3 1-8 1.5-9.3.7-1.1.9-1.3 2.5-1.9 3.2-1.2 12.5-1.5 24.4-1.5 12.5 0 22.7-.7 31-7.5s10.5-17.5 10.5-28.8a11.3 11.3 0 0 0-11.5-11.4" />
+        <path d="M131.3 97a11.3 11.3 0 0 0-11.1 11.3v13.2a11.3 11.3 0 1 0 22.5 0v-13.2a11.3 11.3 0 0 0-11.4-11.4" />
+        <path d="M77.1 74.5v13H63.7c-7.4 0-13.4-5.8-13.4-13 0-7.1 6-13 13.4-13s13.4 5.9 13.4 13" />
+    </g>
+</svg>

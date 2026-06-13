@@ -1,4 +1,7 @@
-<h2 style="display: flex; align-items: center;"><img src="./UI_Template/.XAMPPconfig/defaults/icons/files/xampp.svg" width="72" alt="Portable XAMPP Logo">Portable XAMPP</h2>
+<h1 style="display: flex; align-items: center;">
+<img alt="Portable XAMPP Logo" src="./assets/xampp.svg" width="72" valign="middle">
+  &nbsp;Portable XAMPP
+</h1>
 
 Portable XAMPP is a lightweight, zero-setup alternative to traditional XAMPP built for macOS and Linux. By leveraging your system's native package managers (`brew`, `apt`, `dnf`) instead of shipping its own compiled binaries, it maintains an incredibly small footprint while running natively on your hardware.
 
