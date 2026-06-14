@@ -13,7 +13,7 @@ Portable XAMPP is a lightweight, zero-setup alternative to traditional XAMPP bui
 
 
 
-## <img src="./assets/apple-aligned.svg" width="32" alt="macOS" valign="middle"> macOS
+## <picture><source media="(prefers-color-scheme: dark)" srcset="./assets/githubformattingoverrides/apple-aligned-dark.svg"><source media="(prefers-color-scheme: light)" srcset="./assets/apple-aligned.svg"><img src="./assets/apple-aligned.svg" width="32" alt="macOS" valign="middle"></picture> macOS
 
 ### Features
 - **Homebrew Powered**: Uses your system's Homebrew installations of `httpd`, `mysql`, and `php`. If you don't have them installed, the app automatically detects this and installs them for you via a Terminal script on the first launch.
@@ -31,7 +31,7 @@ Portable XAMPP is a lightweight, zero-setup alternative to traditional XAMPP bui
 You can change your working directory by editing the `web_path.conf` file located inside the app bundle (`PortableXAMPP.app/Contents/Resources/web_path.conf`). Because of the dynamic Micro-Config architecture, the app automatically handles rerouting Apache's `DocumentRoot` for you on every launch. If you need to make deep, global server adjustments (like changing ports), you make those natively in your global Homebrew `/opt/homebrew/etc/httpd/httpd.conf` file.
 
 
-## <img src="./assets/linux-aligned.svg" width="32" alt="Linux" valign="middle"> Linux
+## <picture><source media="(prefers-color-scheme: dark)" srcset="./assets/githubformattingoverrides/linux-aligned-dark.svg"><source media="(prefers-color-scheme: light)" srcset="./assets/linux-aligned.svg"><img src="./assets/linux-aligned.svg" width="32" alt="Linux" valign="middle"></picture> Linux
 
 ### Features
 - **Native Package Managers**: Auto-detects your distro's package manager (`apt`, `dnf`, `pacman`) to ensure dependencies are met natively without bloat.
