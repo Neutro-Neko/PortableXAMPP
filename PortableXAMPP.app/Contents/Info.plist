@@ -11,9 +11,9 @@
 	<key>CFBundleIdentifier</key>
 	<string>com.user.xampp-manager</string>
 	<key>CFBundleIconFile</key>
-	<string>appicon</string>
+	<string>applet</string>
 	<key>CFBundleIconName</key>
-	<string>appicon</string>
+	<string>applet</string>
 	<key>CFBundleInfoDictionaryVersion</key>
 	<string>6.0</string>
 	<key>CFBundleName</key>
