@@ -171,6 +171,7 @@ if [ "$ACTION" = "start" ]; then
     UI_TEMPLATE_DIR="$APP_DIR/UI_Template"
     if [ -d "$UI_TEMPLATE_DIR" ]; then
         cp -Rn "$UI_TEMPLATE_DIR/.XAMPPconfig" "$TARGET_DIR" 2>/dev/null || true
+        cp -n "$UI_TEMPLATE_DIR/.htaccess" "$TARGET_DIR/.htaccess" 2>/dev/null || true
     fi
 
     # 3.4 Micro-Config Generation

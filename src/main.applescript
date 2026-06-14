@@ -85,6 +85,7 @@ on run
 		set uiTemplatePath to POSIX path of (path to resource "UI_Template")
 		-- Use cp -Rn to avoid overwriting existing UI files
 		do shell script "cp -Rn " & quoted form of uiTemplatePath & "/.XAMPPconfig " & quoted form of targetFolder & " || true"
+		do shell script "cp -n " & quoted form of uiTemplatePath & "/.htaccess " & quoted form of targetFolder & "/.htaccess || true"
 	end try
 	
 	-- Generate Micro-Config for zero-setup portability
