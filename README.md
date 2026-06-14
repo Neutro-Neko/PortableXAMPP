@@ -16,7 +16,7 @@ Portable XAMPP is a lightweight, zero-setup alternative to traditional XAMPP bui
 
 ## 🚀 Usage
 
-### <img src="./assets/apple.svg" width="24" alt="macOS"> macOS Edition
+### <img src="./assets/apple-aligned.svg" width="32" alt="macOS" valign="middle"> macOS Edition
 
 1. Open `PortableXAMPP.app`.
 2. On the first launch, it will ask you to provide the absolute path to your web development folder. It will open `web_path.conf` in TextEdit—simply paste your path, save, and relaunch.
@@ -24,7 +24,7 @@ Portable XAMPP is a lightweight, zero-setup alternative to traditional XAMPP bui
 4. Your servers are now running! Visit `http://localhost:8080` in your browser. _(Note: It defaults to port `8080` instead of `80` to avoid requiring root/sudo privileges on macOS)._
 5. When you're done working, just **Quit** the app from the macOS Dock to shut down the Apache and MySQL servers.
 
-### <img src="./assets/linux.svg" width="24" alt="Linux"> Linux Edition
+### <img src="./assets/linux-aligned.svg" width="32" alt="Linux" valign="middle"> Linux Edition
 
 1. Navigate to the `Linux/` folder.
 2. Make the script executable: `chmod +x PortableXAMPP.sh`
