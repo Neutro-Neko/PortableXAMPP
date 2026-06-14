@@ -32,7 +32,7 @@ fi
 
 echo "Building AppImage..."
 export APPIMAGE_EXTRACT_AND_RUN=1
-./scripts/appimagetool-x86_64.AppImage "$BUILD_DIR" releases/PortableXAMPP-Linux-x86_64.AppImage
+ARCH=x86_64 ./scripts/appimagetool-x86_64.AppImage "$BUILD_DIR" releases/PortableXAMPP-Linux-x86_64.AppImage
 
 echo "Done! Generated releases/PortableXAMPP-Linux-x86_64.AppImage"
 rm -rf "$BUILD_DIR"
