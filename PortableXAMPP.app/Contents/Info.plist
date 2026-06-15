@@ -39,6 +39,16 @@
 	<string>This script needs access to your camera to run.</string>
 	<key>NSContactsUsageDescription</key>
 	<string>This script needs access to your contacts to run.</string>
+	<key>NSDesktopFolderUsageDescription</key>
+	<string>This app needs access to your Desktop to host your web project.</string>
+	<key>NSDocumentsFolderUsageDescription</key>
+	<string>This app needs access to your Documents folder to host your web project.</string>
+	<key>NSDownloadsFolderUsageDescription</key>
+	<string>This app needs access to your Downloads folder to host your web project.</string>
+	<key>NSNetworkVolumesUsageDescription</key>
+	<string>This app needs access to network volumes to host your web project.</string>
+	<key>NSRemovableVolumesUsageDescription</key>
+	<string>This app needs access to removable volumes to host your web project.</string>
 	<key>NSHomeKitUsageDescription</key>
 	<string>This script needs access to your HomeKit Home to run.</string>
 	<key>NSMicrophoneUsageDescription</key>
