@@ -8,12 +8,12 @@
 	<string>en</string>
 	<key>CFBundleExecutable</key>
 	<string>applet</string>
-	<key>CFBundleIdentifier</key>
-	<string>com.user.xampp-manager</string>
 	<key>CFBundleIconFile</key>
 	<string>appicon</string>
 	<key>CFBundleIconName</key>
 	<string>appicon</string>
+	<key>CFBundleIdentifier</key>
+	<string>com.user.portablexampp</string>
 	<key>CFBundleInfoDictionaryVersion</key>
 	<string>6.0</string>
 	<key>CFBundleName</key>
@@ -39,6 +39,12 @@
 	<string>This script needs access to your camera to run.</string>
 	<key>NSContactsUsageDescription</key>
 	<string>This script needs access to your contacts to run.</string>
+	<key>NSDesktopFolderUsageDescription</key>
+	<string>PortableXAMPP needs access to your Desktop to serve web files.</string>
+	<key>NSDocumentsFolderUsageDescription</key>
+	<string>PortableXAMPP needs access to your Documents to serve web files.</string>
+	<key>NSDownloadsFolderUsageDescription</key>
+	<string>PortableXAMPP needs access to your Downloads to serve web files.</string>
 	<key>NSHomeKitUsageDescription</key>
 	<string>This script needs access to your HomeKit Home to run.</string>
 	<key>NSMicrophoneUsageDescription</key>

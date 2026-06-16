@@ -42,3 +42,8 @@
 (allow file-read* file-write*
     (subpath (param "WEB_ROOT"))
 )
+
+;; 8. Universal Config & Logs: Allow Apache to write logs globally
+(allow file-read* file-write*
+    (subpath "/Users/Shared/PortableXAMPP")
+)

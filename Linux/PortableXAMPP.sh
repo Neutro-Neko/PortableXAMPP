@@ -109,14 +109,18 @@ if [ "$ACTION" = "stop" ]; then
         fi
     fi
     
-    if command -v systemctl >/dev/null 2>&1; then
-        if systemctl is-active --quiet mysql || systemctl is-active --quiet mariadb || systemctl is-active --quiet mysqld; then
+    # Stop MySQL (Optimized Universal Loop)
+    for svc in mysql mariadb mysqld; do
+        if command -v systemctl >/dev/null 2>&1 && systemctl is-active --quiet "$svc"; then
             check_sudo_tty "stop MySQL"
-            if systemctl is-active --quiet mysql; then $SUDO_TOOL systemctl stop mysql;
-            elif systemctl is-active --quiet mariadb; then $SUDO_TOOL systemctl stop mariadb;
-            elif systemctl is-active --quiet mysqld; then $SUDO_TOOL systemctl stop mysqld; fi
+            $SUDO_TOOL systemctl stop "$svc"
+            break
+        elif [ -x "/etc/init.d/$svc" ] && service "$svc" status 2>/dev/null | grep -iq "running"; then
+            check_sudo_tty "stop MySQL"
+            $SUDO_TOOL service "$svc" stop >/dev/null 2>&1
+            break
         fi
-    fi
+    done
     
     show_message "info" "XAMPP servers stopped."
     exit 0
@@ -124,6 +128,15 @@ fi
 
 # 3. Start Action
 if [ "$ACTION" = "start" ]; then
+    # 3.0 Auto-Patch the .desktop file for Universal Compatibility
+    DESKTOP_FILE="$APP_DIR/PortableXAMPP.desktop"
+    if [ -f "$DESKTOP_FILE" ] && grep -q "^Exec=%k" "$DESKTOP_FILE"; then
+        sed -i -e "s|^Exec=.*|Exec=\"$APP_DIR/PortableXAMPP.sh\" start|" \
+               -e "s|^Icon=.*|Icon=$APP_DIR/icon.svg|" "$DESKTOP_FILE"
+        chmod +x "$DESKTOP_FILE" 2>/dev/null || true
+        command -v gio >/dev/null 2>&1 && gio set "$DESKTOP_FILE" metadata::trusted true 2>/dev/null
+    fi
+
     # 3.1 Config Generation & Validation
     if [ ! -f "$CONFIG_FILE" ]; then
         echo "INSERT_YOUR_WEB_FOLDER_PATH_HERE" > "$CONFIG_FILE"
@@ -184,17 +197,22 @@ if [ "$ACTION" = "start" ]; then
         printf 'DocumentRoot "%s"\n<Directory "%s">\nOptions Indexes FollowSymLinks\nAllowOverride All\nRequire all granted\n</Directory>\n' "$TARGET_DIR" "$TARGET_DIR" > "$MICRO_CONFIG"
     fi
 
-    # 3.5 Boot MySQL
-    if command -v systemctl >/dev/null 2>&1; then
-        if ! systemctl is-active --quiet mysql && ! systemctl is-active --quiet mariadb && ! systemctl is-active --quiet mysqld; then
-            if systemctl list-unit-files | grep -q "^mysql.service" || systemctl list-unit-files | grep -q "^mariadb.service" || systemctl list-unit-files | grep -q "^mysqld.service"; then
+    # 3.5 Boot MySQL (Optimized Universal Loop)
+    for svc in mysql mariadb mysqld; do
+        if command -v systemctl >/dev/null 2>&1 && systemctl list-unit-files | grep -q "^${svc}\.service"; then
+            if ! systemctl is-active --quiet "$svc"; then
                 check_sudo_tty "start MySQL"
-                if systemctl list-unit-files | grep -q "^mysql.service"; then $SUDO_TOOL systemctl start mysql;
-                elif systemctl list-unit-files | grep -q "^mariadb.service"; then $SUDO_TOOL systemctl start mariadb;
-                elif systemctl list-unit-files | grep -q "^mysqld.service"; then $SUDO_TOOL systemctl start mysqld; fi
+                $SUDO_TOOL systemctl start "$svc"
             fi
+            break
+        elif [ -x "/etc/init.d/$svc" ]; then
+            if ! service "$svc" status 2>/dev/null | grep -iq "running"; then
+                check_sudo_tty "start MySQL"
+                $SUDO_TOOL service "$svc" start >/dev/null 2>&1
+            fi
+            break
         fi
-    fi
+    done
 
     # 3.6 Base Apache Command
     EXEC_CMD="$APACHE_BIN -c 'Include \"$MICRO_CONFIG\"' -k start"
