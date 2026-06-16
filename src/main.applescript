@@ -1,13 +1,11 @@
 on run
-	-- 1.1 Config File Resolution Initialization
-	set configFile to ""
+	-- 1.1 Universal Config File Initialization
+	set sharedDir to "/Users/Shared/PortableXAMPP"
+	set configFile to sharedDir & "/web_path.conf"
+	
+	-- Ensure the global Shared directory exists natively
 	try
-		set configFile to POSIX path of (path to resource "web_path.conf")
-	on error
-		-- Get path to Resources folder using an existing resource
-		set jailPath to POSIX path of (path to resource "xampp-jail.sb")
-		set resourcesFolder to do shell script "dirname " & quoted form of jailPath
-		set configFile to resourcesFolder & "/web_path.conf"
+		do shell script "mkdir -p " & quoted form of sharedDir
 	end try
 	
 	-- 1.2 Dynamic Config Generation & Validation Gate
@@ -19,16 +17,26 @@ on run
 	
 	if not configExists then
 		try
-			do shell script "echo 'INSERT_YOUR_WEB_FOLDER_PATH_HERE' > " & quoted form of configFile
+			do shell script "printf 'INSERT_YOUR_WEB_FOLDER_PATH_HERE\\nSANDBOX=OFF\\nSUDO_TOOL=AUTO\\nSAVE_LOGS=OFF\\n' > " & quoted form of configFile
 		end try
 	end if
 	
-	-- Read target path from config file
+	-- Parse Config File
 	set targetFolder to ""
+	set saveLogs to "OFF"
 	try
-		set targetFolder to do shell script "cat " & quoted form of configFile
-		-- Trim any whitespace
-		set targetFolder to do shell script "echo " & quoted form of targetFolder & " | xargs"
+		set configLines to paragraphs of (do shell script "cat " & quoted form of configFile)
+		if (count of configLines) > 0 then
+			set targetFolder to item 1 of configLines
+			set targetFolder to do shell script "echo " & quoted form of targetFolder & " | xargs"
+		end if
+		
+		repeat with currentLine in configLines
+			if currentLine starts with "SAVE_LOGS=" then
+				set saveLogs to text ((offset of "=" in currentLine) + 1) thru -1 of currentLine
+				set saveLogs to do shell script "echo " & quoted form of saveLogs & " | xargs"
+			end if
+		end repeat
 	end try
 	
 	-- 1.3 Configuration Validation Gate
@@ -90,15 +98,51 @@ on run
 	
 	-- Generate Micro-Config for zero-setup portability
 	try
-		set microConfig to targetFolder & "/.XAMPPconfig/overrides/micro.conf"
-		do shell script "printf 'DocumentRoot \"%s\"\\n<Directory \"%s\">\\nOptions Indexes FollowSymLinks\\nAllowOverride All\\nRequire all granted\\n</Directory>\\n' " & quoted form of targetFolder & " " & quoted form of targetFolder & " > " & quoted form of microConfig
+		set microConfig to targetFolder & "/.XAMPPconfig/micro.conf"
+		
+		-- Universal macOS Logging in /Users/Shared/
+		set sharedLogsDir to "/Users/Shared/PortableXAMPP/logs/"
+		set projectName to do shell script "basename " & quoted form of targetFolder
+		set projectLogsDir to sharedLogsDir & projectName
+		do shell script "mkdir -p " & quoted form of projectLogsDir
+		
+		set errorLogPath to projectLogsDir & "/apache_error.log"
+		set configContent to "DocumentRoot \"" & targetFolder & "\"
+ErrorLog \"" & errorLogPath & "\"
+LogLevel debug
+<Directory \"" & targetFolder & "\">
+Options Indexes FollowSymLinks
+AllowOverride All
+Require all granted
+</Directory>
+"
+		set fileRef to open for access POSIX file microConfig with write permission
+		set eof of fileRef to 0
+		write configContent to fileRef starting at eof
+		close access fileRef
 	on error errMsg
+		try
+			close access fileRef
+		end try
 		display dialog "Failed to generate micro-configuration: " & errMsg buttons {"OK"} default button "OK" with icon stop
 	end try
-
-	-- Start MySQL with Homebrew PATH exported and output redirected to avoid hanging
+	
+	set startupLog to quoted form of (projectLogsDir & "/startup.log")
+	
+	set redirOp to ">"
+	if saveLogs is "ON" then
+		set redirOp to ">>"
+	else
+		-- Clear old logs if not saving them
+		try
+			do shell script "> " & quoted form of errorLogPath
+			do shell script "> " & startupLog
+		end try
+	end if
+	
+	-- Start MySQL with Homebrew PATH exported and output redirected to log
 	try
-		do shell script "export PATH=/opt/homebrew/bin:$PATH; /opt/homebrew/bin/mysql.server start > /dev/null 2>&1"
+		do shell script "export PATH=/opt/homebrew/bin:$PATH; /opt/homebrew/bin/mysql.server start " & redirOp & " " & startupLog & " 2>&1"
 	on error errMsg
 		display dialog "Failed to start MySQL: " & errMsg buttons {"OK"} default button "OK" with icon stop
 	end try
@@ -107,7 +151,7 @@ on run
 	try
 		set jailPath to POSIX path of (path to resource "xampp-jail.sb")
 		-- 1.7 Sandbox Parameter Passing & Micro-Config Injection
-		do shell script "export PATH=/opt/homebrew/bin:$PATH; sandbox-exec -D WEB_ROOT=" & quoted form of targetFolder & " -f " & quoted form of jailPath & " /opt/homebrew/bin/httpd -c \"Include " & quoted form of microConfig & "\" -k start > /dev/null 2>&1"
+		do shell script "export PATH=/opt/homebrew/bin:$PATH; sandbox-exec -D WEB_ROOT=" & quoted form of targetFolder & " -f " & quoted form of jailPath & " /opt/homebrew/bin/httpd -c \"Include " & quoted form of microConfig & "\" -k start " & redirOp & " " & startupLog & " 2>&1"
 	on error errMsg
 		display dialog "Failed to start Apache: " & errMsg buttons {"OK"} default button "OK" with icon stop
 	end try
