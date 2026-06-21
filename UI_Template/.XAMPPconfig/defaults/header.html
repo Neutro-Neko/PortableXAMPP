@@ -21,23 +21,7 @@
             }
         });
 
-        // 1. Centralized dictionary mapping icons to file extensions
-        const fileDictionary = {
-            "php.svg": [".php", ".phtml"],
-            "html.svg": [".html", ".htm"],
-            "css.svg": [".css"],
-            "js.svg": [".js", ".mjs", ".cjs", ".ts"],
-            "sql.svg": [".sql", ".db", ".sqlite"],
-            "png.svg": [".png", ".jpg", ".jpeg", ".gif", ".webp", ".heic", ".heif"],
-            "zip.svg": [".zip", ".rar", ".tar", ".gz", ".7z"],
-            "shell.svg": [".sh", ".zsh", ".bash"],
-            "svg.svg": [".svg"],
-            "pdf.svg": [".pdf"],
-            "git.svg": [".gitignore", ".git"],
-            "markdown.svg": [".md"],
-            "xml.svg": [".xml"],
-            "exe.svg": [".dmg", ".pkg"]
-        };
+
 
 
         // Modal Control Elements
@@ -105,15 +89,17 @@
             // Skip directories and parent links
             if (hrefLower.endsWith('/') || hrefLower.includes('../') || hrefLower === '/' || hrefLower.startsWith('?')) return;
 
-            // Apply icons dynamically using the dictionary
-            for (const [iconName, extensions] of Object.entries(fileDictionary)) {
-                if (extensions.some(ext => hrefLower.endsWith(ext))) {
-                    const resolvedUrl = getResolvedIconUrl(iconName);
-                    link.style.setProperty('--dynamic-icon', `url('${resolvedUrl}')`);
-                    link.classList.add('dict-icon');
-                    break;
-                }
+            // Apply icons dynamically based strictly on the file extension
+            let iconExt = hrefLower.split('.').pop();
+            // Handle files without extensions gracefully
+            if (!hrefLower.includes('.') || iconExt === hrefLower) {
+                iconExt = 'file';
             }
+            
+            const iconName = `${iconExt}.svg`;
+            const resolvedUrl = getResolvedIconUrl(iconName);
+            link.style.setProperty('--dynamic-icon', `url('${resolvedUrl}')`);
+            link.classList.add('dict-icon');
 
             // Intercept clicks on non-viewable extensions
             const viewableExtensions = [

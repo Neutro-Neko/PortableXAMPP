@@ -6,7 +6,7 @@
 ACTION=$1
 
 APP_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-CONFIG_FILE="$APP_DIR/web_path.conf"
+CONFIG_FILE="$APP_DIR/config.conf"
 
 # 1. Detect GUI Dialog Tool (Requires command execution, kept as if/elif)
 DIALOG_TOOL="cli"

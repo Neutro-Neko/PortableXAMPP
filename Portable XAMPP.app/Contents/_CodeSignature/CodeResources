@@ -10,7 +10,7 @@
 		</data>
 		<key>Resources/Scripts/main.scpt</key>
 		<data>
-		qFx0NHU0ZkYyH2skpK0KJ7xCkDE=
+		JNTK5tXUFNptH+u2IPLNfXWsQpk=
 		</data>
 		<key>Resources/UI_Template/.XAMPPconfig/defaults/autoindex.css</key>
 		<data>
@@ -18,7 +18,7 @@
 		</data>
 		<key>Resources/UI_Template/.XAMPPconfig/defaults/header.html</key>
 		<data>
-		2xW1Oi4XB6D7flHOFGjjWC2pggU=
+		6PUqeeRCap9C4I5pJoH+c+XyGGU=
 		</data>
 		<key>Resources/UI_Template/.XAMPPconfig/defaults/icons/files/angular-component.svg</key>
 		<data>
@@ -295,10 +295,6 @@
 		<key>Resources/UI_Template/.XAMPPconfig/defaults/icons/files/gear.svg</key>
 		<data>
 		E5S+CT/sqgUTs/EIxfS1WXLCJRg=
-		</data>
-		<key>Resources/UI_Template/.XAMPPconfig/defaults/icons/files/gif.svg</key>
-		<data>
-		O4VBVvmRSjmgnh6c/XPgeeLK5p4=
 		</data>
 		<key>Resources/UI_Template/.XAMPPconfig/defaults/icons/files/git.svg</key>
 		<data>
@@ -768,10 +764,6 @@
 		<data>
 		ecBpoDNZO5v0/OycR1jgatHPThk=
 		</data>
-		<key>Resources/UI_Template/.XAMPPconfig/defaults/icons/files/ts.svg</key>
-		<data>
-		NdpC2s8/ygsplMfeXuCnGKr+hjQ=
-		</data>
 		<key>Resources/UI_Template/.XAMPPconfig/defaults/icons/files/tsconfig.svg</key>
 		<data>
 		Ij9/VU/sTsZakvVEOPgXmACGt4Y=
@@ -1178,7 +1170,7 @@
 		</data>
 		<key>Resources/xampp-jail.sb</key>
 		<data>
-		+nc2jCZJKa336+6gMmzp1ao0nyU=
+		MkeCp8xXalK23SNvS0glbWVmnqg=
 		</data>
 	</dict>
 	<key>files2</key>
@@ -1198,11 +1190,11 @@
 		<dict>
 			<key>hash</key>
 			<data>
-			qFx0NHU0ZkYyH2skpK0KJ7xCkDE=
+			JNTK5tXUFNptH+u2IPLNfXWsQpk=
 			</data>
 			<key>hash2</key>
 			<data>
-			dhshevBGMQ2Q9vaVaifzEXRjyf8i1LmGqN6aAf0pH5w=
+			LdKT9bzfSVK8EKXB0uaXLunBQXMcrbfvqRjslSpsiEw=
 			</data>
 		</dict>
 		<key>Resources/UI_Template/.XAMPPconfig/defaults/autoindex.css</key>
@@ -1220,12 +1212,17 @@
 		<dict>
 			<key>hash</key>
 			<data>
-			2xW1Oi4XB6D7flHOFGjjWC2pggU=
+			6PUqeeRCap9C4I5pJoH+c+XyGGU=
 			</data>
 			<key>hash2</key>
 			<data>
-			dQ3Os0czutCqSbBqvXo0pKDMjHdFbRsasfprGjhLJdk=
+			P/QjXGO5+bNFHlxrfK/NzZ0eduVj1Pmhitbz4GnAvAU=
 			</data>
+		</dict>
+		<key>Resources/UI_Template/.XAMPPconfig/defaults/icons/files/7z.svg</key>
+		<dict>
+			<key>symlink</key>
+			<string>zip.svg</string>
 		</dict>
 		<key>Resources/UI_Template/.XAMPPconfig/defaults/icons/files/angular-component.svg</key>
 		<dict>
@@ -1336,6 +1333,11 @@
 			<data>
 			j0HmXndb5yXX0/GudLHG57VztK7aJeRSFRY0ymXsVwM=
 			</data>
+		</dict>
+		<key>Resources/UI_Template/.XAMPPconfig/defaults/icons/files/bash.svg</key>
+		<dict>
+			<key>symlink</key>
+			<string>shell.svg</string>
 		</dict>
 		<key>Resources/UI_Template/.XAMPPconfig/defaults/icons/files/biome.svg</key>
 		<dict>
@@ -1479,6 +1481,11 @@
 			<data>
 			rN956fyQz9sgpQiV2w2drQ7RKHJzZoUPgAxs40ium7g=
 			</data>
+		</dict>
+		<key>Resources/UI_Template/.XAMPPconfig/defaults/icons/files/cjs.svg</key>
+		<dict>
+			<key>symlink</key>
+			<string>js.svg</string>
 		</dict>
 		<key>Resources/UI_Template/.XAMPPconfig/defaults/icons/files/clojure.svg</key>
 		<dict>
@@ -1733,6 +1740,11 @@
 			Vy3mT7gIjTUnG8OGoYUPfifeQaOgV0nO7xumuWPUh/s=
 			</data>
 		</dict>
+		<key>Resources/UI_Template/.XAMPPconfig/defaults/icons/files/db.svg</key>
+		<dict>
+			<key>symlink</key>
+			<string>sql.svg</string>
+		</dict>
 		<key>Resources/UI_Template/.XAMPPconfig/defaults/icons/files/deno.svg</key>
 		<dict>
 			<key>hash</key>
@@ -1743,6 +1755,11 @@
 			<data>
 			03A4ey5/zk6AAGpWGO/b1hWRNDuH74Se+PJ7WOq2SPo=
 			</data>
+		</dict>
+		<key>Resources/UI_Template/.XAMPPconfig/defaults/icons/files/dmg.svg</key>
+		<dict>
+			<key>symlink</key>
+			<string>exe.svg</string>
 		</dict>
 		<key>Resources/UI_Template/.XAMPPconfig/defaults/icons/files/docker.svg</key>
 		<dict>
@@ -1988,14 +2005,8 @@
 		</dict>
 		<key>Resources/UI_Template/.XAMPPconfig/defaults/icons/files/gif.svg</key>
 		<dict>
-			<key>hash</key>
-			<data>
-			O4VBVvmRSjmgnh6c/XPgeeLK5p4=
-			</data>
-			<key>hash2</key>
-			<data>
-			RHHFKlHF2NdsCuRk+e5SL/3aflZ0rAMrSBr/d5Opc2M=
-			</data>
+			<key>symlink</key>
+			<string>png.svg</string>
 		</dict>
 		<key>Resources/UI_Template/.XAMPPconfig/defaults/icons/files/git.svg</key>
 		<dict>
@@ -2018,6 +2029,16 @@
 			<data>
 			wdnKhz+dHYzX5yG/iqYwfokQciqAfNs3+bVxfBSf1kA=
 			</data>
+		</dict>
+		<key>Resources/UI_Template/.XAMPPconfig/defaults/icons/files/gitignore.svg</key>
+		<dict>
+			<key>symlink</key>
+			<string>git.svg</string>
+		</dict>
+		<key>Resources/UI_Template/.XAMPPconfig/defaults/icons/files/gitkeep.svg</key>
+		<dict>
+			<key>symlink</key>
+			<string>git.svg</string>
 		</dict>
 		<key>Resources/UI_Template/.XAMPPconfig/defaults/icons/files/gitlab.svg</key>
 		<dict>
@@ -2096,6 +2117,11 @@
 			aPd/e8SQ0REkDdr/6HOi8d2u3B0rojAEe03QHDOTSHA=
 			</data>
 		</dict>
+		<key>Resources/UI_Template/.XAMPPconfig/defaults/icons/files/gz.svg</key>
+		<dict>
+			<key>symlink</key>
+			<string>zip.svg</string>
+		</dict>
 		<key>Resources/UI_Template/.XAMPPconfig/defaults/icons/files/h.svg</key>
 		<dict>
 			<key>hash</key>
@@ -2128,6 +2154,21 @@
 			<data>
 			MBZdUetrGSDdF7MKsOlISpg03YHJ6VhNi3zrwUoOgXI=
 			</data>
+		</dict>
+		<key>Resources/UI_Template/.XAMPPconfig/defaults/icons/files/heic.svg</key>
+		<dict>
+			<key>symlink</key>
+			<string>png.svg</string>
+		</dict>
+		<key>Resources/UI_Template/.XAMPPconfig/defaults/icons/files/heif.svg</key>
+		<dict>
+			<key>symlink</key>
+			<string>png.svg</string>
+		</dict>
+		<key>Resources/UI_Template/.XAMPPconfig/defaults/icons/files/htm.svg</key>
+		<dict>
+			<key>symlink</key>
+			<string>html.svg</string>
 		</dict>
 		<key>Resources/UI_Template/.XAMPPconfig/defaults/icons/files/html.svg</key>
 		<dict>
@@ -2227,6 +2268,16 @@
 			<data>
 			MoHIdzEFW79iZqqBAhZaMuJ9F6rkPc2herknbyAKP5o=
 			</data>
+		</dict>
+		<key>Resources/UI_Template/.XAMPPconfig/defaults/icons/files/jpeg.svg</key>
+		<dict>
+			<key>symlink</key>
+			<string>png.svg</string>
+		</dict>
+		<key>Resources/UI_Template/.XAMPPconfig/defaults/icons/files/jpg.svg</key>
+		<dict>
+			<key>symlink</key>
+			<string>png.svg</string>
 		</dict>
 		<key>Resources/UI_Template/.XAMPPconfig/defaults/icons/files/js-test.svg</key>
 		<dict>
@@ -2393,6 +2444,11 @@
 			mHJm47xR3TtQKi7KjhrfZSPPIS6RIb4+0eNCN5X7ozw=
 			</data>
 		</dict>
+		<key>Resources/UI_Template/.XAMPPconfig/defaults/icons/files/md.svg</key>
+		<dict>
+			<key>symlink</key>
+			<string>markdown.svg</string>
+		</dict>
 		<key>Resources/UI_Template/.XAMPPconfig/defaults/icons/files/mdx.svg</key>
 		<dict>
 			<key>hash</key>
@@ -2414,6 +2470,11 @@
 			<data>
 			3S1aManxtFMgYEYRaIEh/QsR97DIFPfzOzTcUb+NxPY=
 			</data>
+		</dict>
+		<key>Resources/UI_Template/.XAMPPconfig/defaults/icons/files/mjs.svg</key>
+		<dict>
+			<key>symlink</key>
+			<string>js.svg</string>
 		</dict>
 		<key>Resources/UI_Template/.XAMPPconfig/defaults/icons/files/mongo.svg</key>
 		<dict>
@@ -2668,6 +2729,16 @@
 			4pBXBZILJjYwnXhcLfPxVdY3mwqppE3HgxUkUF+i3v0=
 			</data>
 		</dict>
+		<key>Resources/UI_Template/.XAMPPconfig/defaults/icons/files/phtml.svg</key>
+		<dict>
+			<key>symlink</key>
+			<string>php.svg</string>
+		</dict>
+		<key>Resources/UI_Template/.XAMPPconfig/defaults/icons/files/pkg.svg</key>
+		<dict>
+			<key>symlink</key>
+			<string>exe.svg</string>
+		</dict>
 		<key>Resources/UI_Template/.XAMPPconfig/defaults/icons/files/pkl.svg</key>
 		<dict>
 			<key>hash</key>
@@ -2799,6 +2870,11 @@
 			<data>
 			Hnyp8FvFX+RjCZdcpWphaO5LgaslSxWVueR9cx8sBO4=
 			</data>
+		</dict>
+		<key>Resources/UI_Template/.XAMPPconfig/defaults/icons/files/rar.svg</key>
+		<dict>
+			<key>symlink</key>
+			<string>zip.svg</string>
 		</dict>
 		<key>Resources/UI_Template/.XAMPPconfig/defaults/icons/files/razor.svg</key>
 		<dict>
@@ -3053,6 +3129,11 @@
 			NxKb24kSexumkcpWwj8/yad4XQWZcnYeOazQN6q8pW0=
 			</data>
 		</dict>
+		<key>Resources/UI_Template/.XAMPPconfig/defaults/icons/files/sh.svg</key>
+		<dict>
+			<key>symlink</key>
+			<string>shell.svg</string>
+		</dict>
 		<key>Resources/UI_Template/.XAMPPconfig/defaults/icons/files/shell.svg</key>
 		<dict>
 			<key>hash</key>
@@ -3085,6 +3166,11 @@
 			<data>
 			DnXZvCRCcauF2w2YrWfdhfoiLUAFr9sbzgHyCYkus/k=
 			</data>
+		</dict>
+		<key>Resources/UI_Template/.XAMPPconfig/defaults/icons/files/sqlite.svg</key>
+		<dict>
+			<key>symlink</key>
+			<string>sql.svg</string>
 		</dict>
 		<key>Resources/UI_Template/.XAMPPconfig/defaults/icons/files/starlark.svg</key>
 		<dict>
@@ -3229,6 +3315,11 @@
 			9YX2LZePxeS0rJcWlzHQMJtxJylzF4+QFz6WTm/TGTM=
 			</data>
 		</dict>
+		<key>Resources/UI_Template/.XAMPPconfig/defaults/icons/files/tar.svg</key>
+		<dict>
+			<key>symlink</key>
+			<string>zip.svg</string>
+		</dict>
 		<key>Resources/UI_Template/.XAMPPconfig/defaults/icons/files/terraform.svg</key>
 		<dict>
 			<key>hash</key>
@@ -3286,14 +3377,8 @@
 		</dict>
 		<key>Resources/UI_Template/.XAMPPconfig/defaults/icons/files/ts.svg</key>
 		<dict>
-			<key>hash</key>
-			<data>
-			NdpC2s8/ygsplMfeXuCnGKr+hjQ=
-			</data>
-			<key>hash2</key>
-			<data>
-			1nTsUitmmpzuM5puyQRFnw9SUdgEbvILoKIVx/PuaHE=
-			</data>
+			<key>symlink</key>
+			<string>js.svg</string>
 		</dict>
 		<key>Resources/UI_Template/.XAMPPconfig/defaults/icons/files/tsconfig.svg</key>
 		<dict>
@@ -3427,6 +3512,11 @@
 			g48Ji8+RxaP9O3QfOlloUp81KI736oStIN/QIiZFy1w=
 			</data>
 		</dict>
+		<key>Resources/UI_Template/.XAMPPconfig/defaults/icons/files/webp.svg</key>
+		<dict>
+			<key>symlink</key>
+			<string>png.svg</string>
+		</dict>
 		<key>Resources/UI_Template/.XAMPPconfig/defaults/icons/files/webpack.svg</key>
 		<dict>
 			<key>hash</key>
@@ -3503,6 +3593,11 @@
 			<data>
 			NFThIp2NRkHaO9Vmhj7ASs+1B4GeRaEBjrJCEXUTpi0=
 			</data>
+		</dict>
+		<key>Resources/UI_Template/.XAMPPconfig/defaults/icons/files/zsh.svg</key>
+		<dict>
+			<key>symlink</key>
+			<string>shell.svg</string>
 		</dict>
 		<key>Resources/UI_Template/.XAMPPconfig/defaults/icons/folders/folder-actions.svg</key>
 		<dict>
@@ -4406,25 +4501,15 @@
 			ezEOz4R5aEp7o+JU/OgWVHDtSiUyLfIoyxGuKwe+lSk=
 			</data>
 		</dict>
-		<key>Resources/logs</key>
-		<dict>
-			<key>symlink</key>
-			<string>/Users/Shared/PortableXAMPP/logs</string>
-		</dict>
-		<key>Resources/web_path.conf</key>
-		<dict>
-			<key>symlink</key>
-			<string>/Users/Shared/PortableXAMPP/web_path.conf</string>
-		</dict>
 		<key>Resources/xampp-jail.sb</key>
 		<dict>
 			<key>hash</key>
 			<data>
-			+nc2jCZJKa336+6gMmzp1ao0nyU=
+			MkeCp8xXalK23SNvS0glbWVmnqg=
 			</data>
 			<key>hash2</key>
 			<data>
-			hTUnVAgjaPS+Kxhwpwla0yh3PUWdMy0NwJVGbYwxjjo=
+			z7bsm9ygVfmKU64HNht0sM4QgviJve5UVV1dDQmoF4U=
 			</data>
 		</dict>
 	</dict>

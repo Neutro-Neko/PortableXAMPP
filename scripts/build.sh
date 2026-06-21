@@ -11,11 +11,14 @@ mkdir -p build_temp/macOS
 
 # 1. Assemble macOS Version (Only on macOS runners)
 if [ "$(uname -s)" = "Darwin" ]; then
+    echo "Compiling and signing the macOS App from source..."
+    bash scripts/build_mac.command
+    
     echo "Packaging macOS..."
-    cp -R PortableXAMPP.app build_temp/macOS/
-    cp -R UI_Template build_temp/macOS/PortableXAMPP.app/Contents/Resources/
+    cp -R "Portable XAMPP.app" build_temp/macOS/
+    cp -R UI_Template build_temp/macOS/"Portable XAMPP.app"/Contents/Resources/
     cd build_temp/macOS
-    ditto -c -k --sequesterRsrc --keepParent PortableXAMPP.app ../../releases/PortableXAMPP-macOS.zip
+    ditto -c -k --sequesterRsrc --keepParent "Portable XAMPP.app" ../../releases/PortableXAMPP-macOS.zip
     cd ../../
 else
     echo "Skipping macOS packaging (Not running on Darwin)."

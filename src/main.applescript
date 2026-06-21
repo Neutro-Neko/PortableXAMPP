@@ -1,7 +1,8 @@
 on run
 	-- 1.1 Universal Config File Initialization
-	set sharedDir to "/Users/Shared/PortableXAMPP"
-	set configFile to sharedDir & "/web_path.conf"
+	set appSupportDir to POSIX path of (path to application support from user domain)
+	set sharedDir to appSupportDir & "PortableXAMPP"
+	set configFile to sharedDir & "/config.conf"
 	
 	-- Ensure the global Shared directory exists natively
 	try
@@ -54,7 +55,7 @@ on run
 	try
 		set triggerTCC to (POSIX file targetFolder) as alias
 	on error
-		display dialog "The path specified in web_path.conf is invalid or inaccessible: " & targetFolder & return & "Please correct the path and relaunch." with title "Invalid Path" buttons {"Edit Config", "Quit"} default button "Edit Config" with icon stop
+		display dialog "The path specified in config.conf is invalid or inaccessible: " & targetFolder & return & "Please correct the path and relaunch." with title "Invalid Path" buttons {"Edit Config", "Quit"} default button "Edit Config" with icon stop
 		if button returned of result is "Edit Config" then
 			do shell script "open -a TextEdit " & quoted form of configFile
 		end if
@@ -101,7 +102,7 @@ on run
 		set microConfig to targetFolder & "/.XAMPPconfig/micro.conf"
 		
 		-- Universal macOS Logging in /Users/Shared/
-		set sharedLogsDir to "/Users/Shared/PortableXAMPP/logs/"
+		set sharedLogsDir to sharedDir & "/logs/"
 		set projectName to do shell script "basename " & quoted form of targetFolder
 		set projectLogsDir to sharedLogsDir & projectName
 		do shell script "mkdir -p " & quoted form of projectLogsDir
@@ -151,17 +152,32 @@ Require all granted
 	try
 		set jailPath to POSIX path of (path to resource "xampp-jail.sb")
 		-- 1.7 Sandbox Parameter Passing & Micro-Config Injection
-		do shell script "export PATH=/opt/homebrew/bin:$PATH; sandbox-exec -D WEB_ROOT=" & quoted form of targetFolder & " -f " & quoted form of jailPath & " /opt/homebrew/bin/httpd -c \"Include " & quoted form of microConfig & "\" -k start " & redirOp & " " & startupLog & " 2>&1"
+		do shell script "export PATH=/opt/homebrew/bin:$PATH; sandbox-exec -D WEB_ROOT=" & quoted form of targetFolder & " -D APP_SUPPORT=" & quoted form of sharedDir & " -f " & quoted form of jailPath & " /opt/homebrew/bin/httpd -c \"Include " & quoted form of microConfig & "\" -k start " & redirOp & " " & startupLog & " 2>&1"
 	on error errMsg
 		display dialog "Failed to start Apache: " & errMsg buttons {"OK"} default button "OK" with icon stop
 	end try
 	
-	display notification "XAMPP servers are active." with title "XAMPP Manager"
+	display notification "XAMPP servers are active." with title "Portable XAMPP"
 end run
 
 on idle
 	return 5
 end idle
+
+on reopen
+	set appSupportDir to POSIX path of (path to application support from user domain)
+	set sharedDir to appSupportDir & "PortableXAMPP"
+	set configFile to sharedDir & "/config.conf"
+	set logsDir to sharedDir & "/logs"
+	
+	set userChoice to button returned of (display dialog "Portable XAMPP Menu" buttons {"Open Config", "View Logs", "Close"} default button "Close" with title "Portable XAMPP")
+	
+	if userChoice is "Open Config" then
+		do shell script "open -a TextEdit " & quoted form of configFile
+	else if userChoice is "View Logs" then
+		do shell script "open " & quoted form of logsDir
+	end if
+end reopen
 
 on quit
 	-- Stop Apache natively WITHOUT admin privileges
@@ -176,6 +192,6 @@ on quit
 	on error errMsg
 	end try
 	
-	display notification "XAMPP servers stopped." with title "XAMPP Manager"
+	display notification "XAMPP servers stopped." with title "Portable XAMPP"
 	continue quit
 end quit
