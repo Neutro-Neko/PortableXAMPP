@@ -17,19 +17,28 @@ Portable XAMPP is a lightweight, zero-setup alternative to traditional XAMPP bui
 
 - **Homebrew Powered**: Uses your system's Homebrew installations of `httpd`, `mysql`, and `php`. If you don't have them installed, the app automatically detects this and installs them for you via a Terminal script on the first launch.
 - **macOS Native Experience**: Comes with a proper macOS squircle app icon and integrates perfectly with the OS. There is no clunky management UI: simply start the app to start the servers, and quit the app from the Dock to stop them.
+- **Dock Menu Integration**: Instantly access your global configuration file or live server logs by clicking the app in the Dock while it's running!
+- **True Multi-User Portability**: Configuration and logs are safely stored in your native `~/Library/Application Support/PortableXAMPP/` directory, completely isolating environments across different macOS user accounts.
 - **Sandboxed Security**: Apache is restricted using a custom macOS Seatbelt kernel profile (`xampp-jail.sb`), dynamically tied to the specific folder you configure, triggering native TCC permission dialogs for maximum privacy.
 
-### Usage
+### Installation & Usage
 
-1. Open `PortableXAMPP.app`.
-2. On the first launch, it will ask you to provide the absolute path to your web development folder. It will open `web_path.conf` in TextEdit—simply paste your path, save, and relaunch.
-3. macOS will ask you for permission to access that folder.
-4. Your servers are now running! Visit `http://localhost:8080` in your browser. _(Note: It defaults to port `8080` instead of `80` to avoid requiring root/sudo privileges on macOS)._
-5. When you're done working, just **Quit** the app from the macOS Dock to shut down the Apache and MySQL servers.
+> [!WARNING]
+> **Quarantine Flag Workaround**  
+> When you download `PortableXAMPP-macOS.zip` from GitHub, macOS Gatekeeper slaps a hidden "quarantine flag" on the app bundle. If you double-click it immediately, macOS might say the app is "damaged and can't be opened."  
+> To fix this, open your Terminal and run:  
+> `xattr -cr "/path/to/Portable XAMPP.app"`
+
+1. Strip the quarantine flag using the `xattr` command above.
+2. Open `Portable XAMPP.app`.
+3. On the first launch, it will ask you to provide the absolute path to your web development folder. It will automatically open `~/Library/Application Support/PortableXAMPP/config.conf` in TextEdit—simply paste your path, save, and relaunch.
+4. macOS will ask you for permission to access that folder. Click Allow.
+5. Your servers are now running! Visit `http://localhost:8080` in your browser. _(Note: It defaults to port `8080` instead of `80` to avoid requiring root/sudo privileges on macOS)._
+6. When you're done working, just **Quit** the app from the macOS Dock to shut down the Apache and MySQL servers.
 
 ### Configuration
 
-You can change your working directory by editing the `web_path.conf` file located inside the app bundle (`PortableXAMPP.app/Contents/Resources/web_path.conf`). Because of the dynamic Micro-Config architecture, the app automatically handles rerouting Apache's `DocumentRoot` for you on every launch. If you need to make deep, global server adjustments (like changing ports), you make those natively in your global Homebrew `/opt/homebrew/etc/httpd/httpd.conf` file.
+You can change your working directory by editing the `config.conf` file located in `~/Library/Application Support/PortableXAMPP/` (or by using the right-click Dock menu!). Because of the dynamic Micro-Config architecture, the app automatically handles rerouting Apache's `DocumentRoot` for you on every launch. If you need to make deep, global server adjustments (like changing ports), you make those natively in your global Homebrew `/opt/homebrew/etc/httpd/httpd.conf` file.
 
 ## <picture><source media="(prefers-color-scheme: dark)" srcset="./assets/github_formatting_overrides/linux-aligned-dark.svg"><source media="(prefers-color-scheme: light)" srcset="./assets/github_formatting_overrides/linux-aligned.svg"><img src="./assets/github_formatting_overrides/linux-aligned.svg" width="32" alt="Linux" valign="middle"></picture> Linux
 
@@ -38,24 +47,20 @@ You can change your working directory by editing the `web_path.conf` file locate
 - **Native Package Managers**: Auto-detects your distro's package manager (`apt`, `dnf`, `pacman`) to ensure dependencies are met natively without bloat.
 - **Sandboxed Security**: Dynamically wraps the server in a secure `bwrap` or `firejail` sandbox (if configured) to ensure your local web environment doesn't compromise your root system.
 - **Bulletproof GUI Integration**: Uses modern `pkexec` (Polkit) for secure graphical password prompts. It includes advanced safety nets (like auto-spawning terminal emulators or notification popups) to ensure the server never silently crashes or hangs, even on minimal headless distros.
-- **Seamless Permissions**: When sandboxing is enabled, Apache dynamically runs under your local user account, eliminating `403 Forbidden` errors. If sandboxing is disabled for maximum compatibility, you simply place your project in a directory that your system's `www-data` group can access.
+- **Extreme Flexibility**: Designed to work gracefully on standard environments like Ubuntu `systemctl`, legacy `init.d` systems, or completely custom binary architectures using manual configuration overrides.
 
-### Usage
+### Installation & Usage
 
-1. Navigate to the `Linux/` folder.
+1. Navigate to the `Linux/` folder in the repository.
 2. Make the script executable: `chmod +x PortableXAMPP.sh`
 3. Launch it via the terminal (`./PortableXAMPP.sh start`) or use the provided `PortableXAMPP.desktop` entry.
-4. On the first launch, a native GUI prompt (Zenity/KDialog) will ask you to paste your target web directory into `web_path.conf`. _(Note: If no GUI dialog tools are installed, it will fall back to your terminal and text editor)._
+4. On the first launch, a native GUI prompt (Zenity/KDialog) will ask you to paste your target web directory into `config.conf`. _(Note: If no GUI dialog tools are installed, it will fall back to your terminal and text editor)._
 
 ### Configuration
 
-The `Linux/web_path.conf` file is automatically generated on your first launch and acts as the brain for the Linux script. Inside it, you can configure:
+The `Linux/config.conf` file is automatically generated on your first launch and acts as the brain for the Linux script.
 
-- **Your Web Directory**: The absolute path to your `localhost` folder (must be the first line).
-- **Custom Binaries**: Manually define paths to your `APACHE_BIN`, `PHP_BIN`, or `MYSQL_BIN` to bypass system defaults.
-- **`SANDBOX=ON/OFF`**: Completely toggle the sandboxing engine on or off.
-- **Custom Sandbox**: Override the default sandbox by providing your own custom `bwrap` or `firejail` execution wrapper.
-- **`SUDO_TOOL=AUTO`**: Force a specific graphical privilege escalator (e.g., `pkexec`, `kdesu`, `gksudo`) if your system's auto-detection fails.
+For a full list of advanced configuration keys (including Manual Binary Overrides, Custom Sandbox injection, and Log Management), please see the [documentation.md](./documentation.md) file.
 
 If you need to make deep, global server adjustments (like changing ports), you make those natively in your global Apache config file (typically `/etc/apache2/apache2.conf` or `/etc/httpd/conf/httpd.conf`).
 
