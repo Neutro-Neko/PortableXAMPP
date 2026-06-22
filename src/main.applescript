@@ -76,7 +76,7 @@ on run
 	set pkgs to {"httpd", "mysql", "php"}
 	repeat with pkg in pkgs
 		try
-			do shell script "export PATH=/opt/homebrew/bin:/usr/local/bin:$PATH; brew list " & pkg
+			do shell script "export HOMEBREW_NO_AUTO_UPDATE=1; export PATH=/opt/homebrew/bin:/usr/local/bin:$PATH; brew list " & pkg
 		on error
 			set missingPkgs to missingPkgs & " " & pkg
 		end try
