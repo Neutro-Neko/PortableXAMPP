@@ -79,17 +79,19 @@ function prompt_open_editor() {
 # 1.5 Parse Config and Detect Root Tool (Optimized single-pass read)
 TARGET_DIR=""
 SANDBOX_OPT="OFF"
+CUSTOM_SANDBOX="AUTO"
 SUDO_TOOL="AUTO"
 SAVE_LOGS="OFF"
 APACHE_BIN="AUTO"
 MYSQL_SVC="AUTO"
 
 if [ -f "$CONFIG_FILE" ]; then
-    TARGET_DIR=$(head -n 1 "$CONFIG_FILE" | xargs)
     while IFS='=' read -r key value; do
         val=$(echo "$value" | xargs)
         case "$key" in
+            TARGET_DIR) TARGET_DIR="$val" ;;
             SANDBOX) SANDBOX_OPT="$val" ;;
+            CUSTOM_SANDBOX) CUSTOM_SANDBOX="$val" ;;
             SUDO_TOOL) SUDO_TOOL="$val" ;;
             SAVE_LOGS) SAVE_LOGS="$val" ;;
             APACHE_BIN) APACHE_BIN="$val" ;;
@@ -180,8 +182,9 @@ case "$ACTION" in
         # 3.1 Config Generation & Validation (Optimized multi-line generation)
         if [ ! -f "$CONFIG_FILE" ]; then
             cat <<EOF > "$CONFIG_FILE"
-INSERT_YOUR_WEB_FOLDER_PATH_HERE
+TARGET_DIR=INSERT_YOUR_WEB_FOLDER_PATH_HERE
 SANDBOX=OFF
+CUSTOM_SANDBOX=AUTO
 SUDO_TOOL=AUTO
 SAVE_LOGS=OFF
 APACHE_BIN=AUTO
@@ -189,6 +192,7 @@ MYSQL_SVC=AUTO
 EOF
             TARGET_DIR="INSERT_YOUR_WEB_FOLDER_PATH_HERE"
             SANDBOX_OPT="OFF"
+            CUSTOM_SANDBOX="AUTO"
             SUDO_TOOL="AUTO"
             SAVE_LOGS="OFF"
             APACHE_BIN="AUTO"
@@ -307,7 +311,9 @@ EOF
 
         # 3.7 Sandboxing (Wrap base command and safely mount application logs directory)
         if [ "$SANDBOX_OPT" = "ON" ]; then
-            if command -v bwrap >/dev/null 2>&1; then
+            if [ "$CUSTOM_SANDBOX" != "AUTO" ] && [ -n "$CUSTOM_SANDBOX" ]; then
+                EXEC_CMD="$CUSTOM_SANDBOX $EXEC_CMD"
+            elif command -v bwrap >/dev/null 2>&1; then
                 EXEC_CMD="bwrap --ro-bind / / --bind \"$TARGET_DIR\" \"$TARGET_DIR\" --bind \"$LOG_DIR\" \"$LOG_DIR\" --bind /tmp /tmp --dev /dev --proc /proc --unshare-all --share-net $EXEC_CMD"
             elif command -v firejail >/dev/null 2>&1; then
                 EXEC_CMD="firejail --noprofile --whitelist=\"$TARGET_DIR\" --whitelist=\"$LOG_DIR\" $EXEC_CMD"
