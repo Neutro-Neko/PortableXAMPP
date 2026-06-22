@@ -190,7 +190,7 @@ on quit
 	
 	-- Stop MySQL
 	try
-		do shell script "export PATH=/opt/homebrew/bin:$PATH; /opt/homebrew/bin/mysql.server stop > /dev/null 2>&1"
+		do shell script "export PATH=/opt/homebrew/bin:$PATH; /opt/homebrew/bin/mysql.server stop > /dev/null 2>&1; pkill -f mysqld > /dev/null 2>&1 || true"
 	on error errMsg
 	end try
 	
