@@ -8,17 +8,26 @@ ACTION=$1
 APP_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 CONFIG_FILE="$APP_DIR/config.conf"
 
-# 1. Detect GUI Dialog Tool (Requires command execution, kept as if/elif)
+# Supported GUI Dialog Tools
+DIALOG_TOOLS=("zenity" "kdialog" "notify-send" "xmessage")
+
+# Supported Terminal Emulators (Format: "binary arg")
+TERMINAL_TOOLS=("x-terminal-emulator -e" "gnome-terminal --" "konsole -e" "xfce4-terminal -x" "xterm -e")
+
+# Supported Graphical Privilege Escalation Tools
+SUDO_TOOLS=("pkexec" "kdesu" "gksudo" "lxqt-sudo")
+
+# Supported MySQL Service Names
+MYSQL_SERVICES=("mysql" "mariadb" "mysqld")
+
+# 1. Detect GUI Dialog Tool
 DIALOG_TOOL="cli"
-if command -v zenity >/dev/null 2>&1; then
-    DIALOG_TOOL="zenity"
-elif command -v kdialog >/dev/null 2>&1; then
-    DIALOG_TOOL="kdialog"
-elif command -v notify-send >/dev/null 2>&1; then
-    DIALOG_TOOL="notify-send"
-elif command -v xmessage >/dev/null 2>&1; then
-    DIALOG_TOOL="xmessage"
-fi
+for tool in "${DIALOG_TOOLS[@]}"; do
+    if command -v "$tool" >/dev/null 2>&1; then
+        DIALOG_TOOL="$tool"
+        break
+    fi
+done
 
 function show_message() {
     local type=$1 # info, warning, error
@@ -44,12 +53,14 @@ function show_message() {
                 echo "[$type] $msg"
             else
                 local term_cmd="echo 'PortableXAMPP [$type]:'; echo '$msg'; echo ''; read -p 'Press Enter to close...'"
-                if command -v x-terminal-emulator >/dev/null 2>&1; then x-terminal-emulator -e bash -c "$term_cmd"
-                elif command -v gnome-terminal >/dev/null 2>&1; then gnome-terminal -- bash -c "$term_cmd"
-                elif command -v konsole >/dev/null 2>&1; then konsole -e bash -c "$term_cmd"
-                elif command -v xfce4-terminal >/dev/null 2>&1; then xfce4-terminal -x bash -c "$term_cmd"
-                elif command -v xterm >/dev/null 2>&1; then xterm -e bash -c "$term_cmd"
-                fi
+                for term_opts in "${TERMINAL_TOOLS[@]}"; do
+                    term="${term_opts%% *}"
+                    opts="${term_opts#* }"
+                    if command -v "$term" >/dev/null 2>&1; then
+                        $term $opts bash -c "$term_cmd"
+                        break
+                    fi
+                done
             fi
             ;;
     esac
@@ -70,6 +81,8 @@ TARGET_DIR=""
 SANDBOX_OPT="OFF"
 SUDO_TOOL="AUTO"
 SAVE_LOGS="OFF"
+APACHE_BIN="AUTO"
+MYSQL_SVC="AUTO"
 
 if [ -f "$CONFIG_FILE" ]; then
     TARGET_DIR=$(head -n 1 "$CONFIG_FILE" | xargs)
@@ -79,16 +92,20 @@ if [ -f "$CONFIG_FILE" ]; then
             SANDBOX) SANDBOX_OPT="$val" ;;
             SUDO_TOOL) SUDO_TOOL="$val" ;;
             SAVE_LOGS) SAVE_LOGS="$val" ;;
+            APACHE_BIN) APACHE_BIN="$val" ;;
+            MYSQL_SVC) MYSQL_SVC="$val" ;;
         esac
     done < "$CONFIG_FILE"
 fi
 
 if [ -z "$SUDO_TOOL" ] || [ "$SUDO_TOOL" = "AUTO" ]; then
     SUDO_TOOL="sudo"
-    if command -v pkexec >/dev/null 2>&1; then SUDO_TOOL="pkexec";
-    elif command -v kdesu >/dev/null 2>&1; then SUDO_TOOL="kdesu";
-    elif command -v gksudo >/dev/null 2>&1; then SUDO_TOOL="gksudo";
-    elif command -v lxqt-sudo >/dev/null 2>&1; then SUDO_TOOL="lxqt-sudo"; fi
+    for tool in "${SUDO_TOOLS[@]}"; do
+        if command -v "$tool" >/dev/null 2>&1; then
+            SUDO_TOOL="$tool"
+            break
+        fi
+    done
 fi
 
 function check_sudo_tty() {
@@ -104,31 +121,47 @@ case "$ACTION" in
     stop)
         echo "Stopping XAMPP servers..."
         
-        APACHE_BIN=""
-        if command -v apache2 >/dev/null 2>&1; then APACHE_BIN="apache2";
-        elif command -v httpd >/dev/null 2>&1; then APACHE_BIN="httpd"; fi
+        if [ "$APACHE_BIN" = "AUTO" ] || [ -z "$APACHE_BIN" ]; then
+            APACHE_BIN=""
+            if command -v apache2 >/dev/null 2>&1; then APACHE_BIN="apache2";
+            elif command -v httpd >/dev/null 2>&1; then APACHE_BIN="httpd"; fi
+        fi
         
         if [ -n "$APACHE_BIN" ]; then
             if [ "$EUID" -ne 0 ] && command -v "$SUDO_TOOL" >/dev/null 2>&1; then
                 check_sudo_tty "stop Apache"
-                $SUDO_TOOL $APACHE_BIN -k stop >/dev/null 2>&1
+                $SUDO_TOOL "$APACHE_BIN" -k stop >/dev/null 2>&1
             else
-                $APACHE_BIN -k stop >/dev/null 2>&1
+                "$APACHE_BIN" -k stop >/dev/null 2>&1
             fi
         fi
         
         # Stop MySQL (Optimized Universal Loop)
-        for svc in mysql mariadb mysqld; do
-            if command -v systemctl >/dev/null 2>&1 && systemctl is-active --quiet "$svc"; then
-                check_sudo_tty "stop MySQL"
-                $SUDO_TOOL systemctl stop "$svc"
-                break
-            elif [ -x "/etc/init.d/$svc" ] && service "$svc" status 2>/dev/null | grep -iq "running"; then
-                check_sudo_tty "stop MySQL"
-                $SUDO_TOOL service "$svc" stop >/dev/null 2>&1
-                break
+        if [ "$MYSQL_SVC" != "AUTO" ] && [ -n "$MYSQL_SVC" ]; then
+            local stop_cmd=""
+            if command -v systemctl >/dev/null 2>&1 && systemctl is-active --quiet "$MYSQL_SVC"; then stop_cmd="systemctl stop $MYSQL_SVC"
+            elif [ -x "/etc/init.d/$MYSQL_SVC" ] && service "$MYSQL_SVC" status 2>/dev/null | grep -iq "running"; then stop_cmd="service $MYSQL_SVC stop"
+            elif [ -x "$MYSQL_SVC" ]; then stop_cmd="\"$MYSQL_SVC\" stop"
             fi
-        done
+            
+            if [ -n "$stop_cmd" ]; then
+                check_sudo_tty "stop MySQL"
+                eval "$SUDO_TOOL $stop_cmd >/dev/null 2>&1"
+            fi
+        else
+            for svc in "${MYSQL_SERVICES[@]}"; do
+                local stop_cmd=""
+                if command -v systemctl >/dev/null 2>&1 && systemctl is-active --quiet "$svc"; then stop_cmd="systemctl stop $svc"
+                elif [ -x "/etc/init.d/$svc" ] && service "$svc" status 2>/dev/null | grep -iq "running"; then stop_cmd="service $svc stop"
+                fi
+                
+                if [ -n "$stop_cmd" ]; then
+                    check_sudo_tty "stop MySQL"
+                    $SUDO_TOOL $stop_cmd >/dev/null 2>&1
+                    break
+                fi
+            done
+        fi
         
         show_message "info" "XAMPP servers stopped."
         exit 0
@@ -151,11 +184,15 @@ INSERT_YOUR_WEB_FOLDER_PATH_HERE
 SANDBOX=OFF
 SUDO_TOOL=AUTO
 SAVE_LOGS=OFF
+APACHE_BIN=AUTO
+MYSQL_SVC=AUTO
 EOF
             TARGET_DIR="INSERT_YOUR_WEB_FOLDER_PATH_HERE"
             SANDBOX_OPT="OFF"
             SUDO_TOOL="AUTO"
             SAVE_LOGS="OFF"
+            APACHE_BIN="AUTO"
+            MYSQL_SVC="AUTO"
         fi
         
         if [ -z "$TARGET_DIR" ] || [ "$TARGET_DIR" = "INSERT_YOUR_WEB_FOLDER_PATH_HERE" ]; then
@@ -171,12 +208,14 @@ EOF
         fi
 
         # 3.2 Dependency Detection
-        APACHE_BIN=""
-        if command -v apache2 >/dev/null 2>&1; then APACHE_BIN="apache2";
-        elif command -v httpd >/dev/null 2>&1; then APACHE_BIN="httpd"; fi
+        if [ "$APACHE_BIN" = "AUTO" ] || [ -z "$APACHE_BIN" ]; then
+            APACHE_BIN=""
+            if command -v apache2 >/dev/null 2>&1; then APACHE_BIN="apache2";
+            elif command -v httpd >/dev/null 2>&1; then APACHE_BIN="httpd"; fi
+        fi
         
-        if [ -z "$APACHE_BIN" ]; then
-            show_message "error" "Apache (apache2 or httpd) is not installed. Please install it via your package manager (apt, dnf, pacman, brew)."
+        if [ -z "$APACHE_BIN" ] || ! command -v "$APACHE_BIN" >/dev/null 2>&1; then
+            show_message "error" "Apache (apache2 or httpd) is not installed or the custom APACHE_BIN path is invalid. Please check your config.conf or install via your package manager."
             exit 1
         fi
 
@@ -230,21 +269,38 @@ EOF
         } > "$MICRO_CONFIG"
 
         # 3.5 Boot MySQL (Optimized Universal Loop)
-        for svc in mysql mariadb mysqld; do
-            if command -v systemctl >/dev/null 2>&1 && systemctl list-unit-files | grep -q "^${svc}\.service"; then
-                if ! systemctl is-active --quiet "$svc"; then
-                    check_sudo_tty "start MySQL"
-                    $SUDO_TOOL systemctl start "$svc"
-                fi
-                break
-            elif [ -x "/etc/init.d/$svc" ]; then
-                if ! service "$svc" status 2>/dev/null | grep -iq "running"; then
-                    check_sudo_tty "start MySQL"
-                    $SUDO_TOOL service "$svc" start >/dev/null 2>&1
-                fi
-                break
+        if [ "$MYSQL_SVC" != "AUTO" ] && [ -n "$MYSQL_SVC" ]; then
+            local start_cmd=""
+            if command -v systemctl >/dev/null 2>&1 && systemctl list-unit-files | grep -q "^${MYSQL_SVC}\.service"; then
+                if ! systemctl is-active --quiet "$MYSQL_SVC"; then start_cmd="systemctl start $MYSQL_SVC"; fi
+            elif [ -x "/etc/init.d/$MYSQL_SVC" ]; then
+                if ! service "$MYSQL_SVC" status 2>/dev/null | grep -iq "running"; then start_cmd="service $MYSQL_SVC start"; fi
+            elif [ -x "$MYSQL_SVC" ]; then
+                start_cmd="\"$MYSQL_SVC\" start &"
+            else
+                show_message "error" "Custom MYSQL_SVC '$MYSQL_SVC' not found as a systemctl/init.d service or executable script."
             fi
-        done
+            
+            if [ -n "$start_cmd" ]; then
+                check_sudo_tty "start MySQL"
+                eval "$SUDO_TOOL $start_cmd >/dev/null 2>&1"
+            fi
+        else
+            for svc in "${MYSQL_SERVICES[@]}"; do
+                local start_cmd=""
+                if command -v systemctl >/dev/null 2>&1 && systemctl list-unit-files | grep -q "^${svc}\.service"; then
+                    if ! systemctl is-active --quiet "$svc"; then start_cmd="systemctl start $svc"; fi
+                elif [ -x "/etc/init.d/$svc" ]; then
+                    if ! service "$svc" status 2>/dev/null | grep -iq "running"; then start_cmd="service $svc start"; fi
+                fi
+                
+                if [ -n "$start_cmd" ]; then
+                    check_sudo_tty "start MySQL"
+                    $SUDO_TOOL $start_cmd >/dev/null 2>&1
+                    break
+                fi
+            done
+        fi
 
         # 3.6 Base Apache Command
         EXEC_CMD="$APACHE_BIN -c 'Include \"$MICRO_CONFIG\"' -k start"
@@ -272,14 +328,10 @@ EOF
             fi
         fi
 
-        # Execute and cleanly route output using dynamic redirection operators
-        eval "$EXEC_CMD $REDIR \"$LOG_DIR/startup.log\" 2>&1"
-        
-        if [ $? -eq 0 ]; then
-            show_message "info" "XAMPP servers are active. Web root: $TARGET_DIR"
-        else
+        # Execute and cleanly route output using dynamic redirection operators and ternary short-circuit
+        eval "$EXEC_CMD $REDIR \"$LOG_DIR/startup.log\" 2>&1" && \
+            show_message "info" "XAMPP servers are active. Web root: $TARGET_DIR" || \
             show_message "error" "Failed to start Apache. Check the logs at: $LOG_DIR/startup.log"
-        fi
         ;;
 
     *)
