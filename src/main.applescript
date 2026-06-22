@@ -18,7 +18,7 @@ on run
 	
 	if not configExists then
 		try
-			do shell script "printf 'INSERT_YOUR_WEB_FOLDER_PATH_HERE\\nSANDBOX=OFF\\nSUDO_TOOL=AUTO\\nSAVE_LOGS=OFF\\n' > " & quoted form of configFile
+			do shell script "printf 'TARGET_DIR=INSERT_YOUR_WEB_FOLDER_PATH_HERE\\nSANDBOX=OFF\\nSUDO_TOOL=AUTO\\nSAVE_LOGS=OFF\\n' > " & quoted form of configFile
 		end try
 	end if
 	
@@ -27,15 +27,17 @@ on run
 	set saveLogs to "OFF"
 	try
 		set configLines to paragraphs of (do shell script "cat " & quoted form of configFile)
-		if (count of configLines) > 0 then
-			set targetFolder to item 1 of configLines
-			set targetFolder to do shell script "echo " & quoted form of targetFolder & " | xargs"
-		end if
-		
 		repeat with currentLine in configLines
-			if currentLine starts with "SAVE_LOGS=" then
-				set saveLogs to text ((offset of "=" in currentLine) + 1) thru -1 of currentLine
-				set saveLogs to do shell script "echo " & quoted form of saveLogs & " | xargs"
+			if currentLine contains "=" then
+				set keyName to text 1 thru ((offset of "=" in currentLine) - 1) of currentLine
+				set valStr to text ((offset of "=" in currentLine) + 1) thru -1 of currentLine
+				set valStr to do shell script "echo " & quoted form of valStr & " | xargs"
+				
+				if keyName is "TARGET_DIR" then
+					set targetFolder to valStr
+				else if keyName is "SAVE_LOGS" then
+					set saveLogs to valStr
+				end if
 			end if
 		end repeat
 	end try
